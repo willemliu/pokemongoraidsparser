@@ -160,9 +160,10 @@ function stats($request) {
 
     $results = [];
     $results['user'] = [];
-    $results['users']['raid_count'] = [];
+    $results['user']['raid_count'] = [];
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      array_push($results['users']['raid_count'], $row);
+      $results['user']['name'] = $row['username'];
+      $results['user']['raid_count'] = $row['raid_count'];
     }
     $result = $dbh->commit();
     return json_encode($results);
