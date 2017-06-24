@@ -142,7 +142,7 @@ echo "<!doctype html>
           margin-bottom: 1rem;
         }
         
-        input[name='pokemon-boss-name']
+        input[name='pokemonBossName']
           width: 100%;
           box-sizing: border-box;
         }
@@ -182,7 +182,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   echo "<h2>[{$row['lvl']}] 
     <a href='https://maps.google.com/?q={$htmlLocation}' target='_blank'>{$row['location']}</a>
   </h2>
-  <input type='text' name='pokemon-boss-name' data-raid-id='{$row['id']}' placeholder='Pokemon raid boss name' value='{$htmlPokemon}' />
+  <input type='text' name='pokemonBossName' data-raid-id='{$row['id']}' placeholder='Pokemon raid boss name' value='{$htmlPokemon}' />
   ";
   if(isset($row['gym']) && strlen($row['gym']) > 0) {
     echo "<div class='gym'>Gym: {$row['gym']}</div>";
