@@ -162,7 +162,7 @@ function stats($request) {
     $results['user'] = [];
     $results['user']['raid_count'] = [];
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $results['user']['name'] = $row['username'];
+      $results['user']['username'] = $row['username'];
       $results['user']['raid_count'] = $row['raid_count'];
     }
     $result = $dbh->commit();
