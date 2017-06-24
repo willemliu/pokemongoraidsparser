@@ -144,8 +144,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   echo "<form class='raid lvl{$row['lvl']}' method='POST' action='/'>";
   echo "<h2><time datetime='{$row['datetime']}'>{$row['datetime']}</time> - 
   lvl: {$row['lvl']} - 
-  <a href='https://maps.google.com/?q={$htmlLocation}' target='_blank'>{$row['location']}</a>
-  Gym: {$row['gym']} - 
+  <a href='https://maps.google.com/?q={$htmlLocation}' target='_blank'>{$row['location']}</a> -
+  Gym: {$row['gym']}
   </h2>";
   $stmt2 = $dbh->prepare("SELECT * FROM users u
                               WHERE raid_id=:raid_id
