@@ -1,4 +1,4 @@
-const regexp = /^(\/raid),(\d),(\d\d):*(\d\d),(.*)$/gim;
+const regexp = /^(\/raid),(\d),(\d\d):*(\d\d),(.*),(.*)$/gim;
 
 chrome.storage.sync.get({
   enable: true,
@@ -6,6 +6,7 @@ chrome.storage.sync.get({
   console.log('Pokemon Go raid parser enabled', items.enable);
   if(items.enable) {
     setInterval(function() {
+      var d = new Date();
       let messages = document.querySelectorAll('.msg');
       for(let idx in messages) {
         if(messages.hasOwnProperty(idx)) {
@@ -14,20 +15,26 @@ chrome.storage.sync.get({
           if(msgText) {
             const txt = getTextContentExceptScript(msgText);
             let matches = regexp.exec(txt);
-            if(matches && matches.length === 6) {
-              console.log(matches[0], matches[1], matches[2], matches[3], matches[4], matches[5]);
-              let formData = new FormData();
-              formData.append('fn', 'addRaid');
-              formData.append('string', matches[0]);
-              formData.append('command', matches[1]);
-              formData.append('lvl', matches[2]);
-              formData.append('hours', matches[3]);
-              formData.append('minutes', matches[4]);
-              formData.append('location', matches[5]);
-              fetch('https://pogo.moviesom.com/index.php', {
-                method: 'POST',
-                body: formData
-              });
+            if(matches && matches.length >== 6) {
+              console.log(matches[0]);
+              let currentTime = parseInt(d.getHours()-2 + '' + d.getMinutes());
+              let raidTime = parseInt(matches[3] + '' + matches[4]);
+              if(raidTime > currentTime) {
+                let formData = new FormData();
+                formData.append('fn', 'addRaid');
+                formData.append('string', matches[0]);
+                formData.append('command', matches[1]);
+                formData.append('lvl', matches[2]);
+                formData.append('hours', matches[3]);
+                formData.append('minutes', matches[4]);
+                formData.append('location', matches[5]);
+                if(matches.length > 6) {
+                }
+                fetch('https://pogo.moviesom.com/index.php', {
+                  method: 'POST',
+                  body: formData
+                });
+              }
             }
           }
         }

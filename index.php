@@ -36,8 +36,9 @@ function addRaid($request) {
     if ($dbh->inTransaction() === false) {
       $dbh->beginTransaction();
     }
-    $stmt = $dbh->prepare("INSERT IGNORE INTO raids
-                             (lvl, datetime, location) VALUES (:lvl, :datetime, :location)");
+    $stmt = $dbh->prepare("INSERT INTO raids
+                             (lvl, datetime, location, gym) VALUES (:lvl, :datetime, :location, :gym) 
+                             ON DUPLICATE KEY UPDATE gym=:gym");
     $tz_object = new DateTimeZone('Europe/Amsterdam');
     $today = new DateTime();
     $today->setTimezone($tz_object);
@@ -45,6 +46,7 @@ function addRaid($request) {
     $stmt->bindParam(":lvl", $request['lvl'], PDO::PARAM_INT);
     $stmt->bindParam(":datetime", $today->format('Y-m-d H:i:s'), PDO::PARAM_STR);
     $stmt->bindParam(":location", $request['location'], PDO::PARAM_STR);
+    $stmt->bindParam(":gym", $request['gym'], PDO::PARAM_STR);
     $stmt->execute();
     $dbh->commit();
   }
@@ -123,8 +125,9 @@ echo "<!doctype html>
     </head>
     <body>
       <h1>Pokemon Go Team Instinct Amsterdam raids</h1>
-      <p>Usage: /raid,&lt;lvl&gt;,&lt;time&gt;,&lt;location&gt;<br/>
-      Example: /raid,2,1430,Amstelstation</p>
+      <p>Usage: /raid,&lt;lvl&gt;,&lt;time&gt;,&lt;location&gt;[,gym]<br/>
+      Example: /raid,2,1430,Amstelstation<br>
+      Example2: /raid,2,1430,Jacob Bontiusplaats 1,Roest</p>
       <label>Username: <input type='text' name='username' placeholder='Type your Pokemon Go name' value='' id='username' /></label>
 
       <div class='raids'>
