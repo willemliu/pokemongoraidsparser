@@ -142,7 +142,7 @@ echo "<!doctype html>
           margin-bottom: 1rem;
         }
         
-        input[name='pokemonBossName']
+        input[name='pokemonBossName'] {
           width: 100%;
           box-sizing: border-box;
         }
