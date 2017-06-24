@@ -216,7 +216,7 @@ echo "
     var pokemonsEl = document.querySelectorAll('[name=\'pokemonBossName\']');
     for(let idx in pokemonsEl) {
       if(pokemonsEl.hasOwnProperty(idx)) {
-        pokemonEl[idx].addEventListener('change', function() {
+        pokemonsEl[idx].addEventListener('change', function() {
           console.log(this);
           var formData = new FormData();
           formData.append('fn', 'addPokemon');
