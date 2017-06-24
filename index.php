@@ -21,7 +21,7 @@ switch ($method) {
           addRaid($_REQUEST);
         } else {
           $msg['msg'] = 'Raid already added. Ignoring command.';
-          echo json_decode($msg);
+          echo json_encode($msg);
           exit(0);
         }
         break;
@@ -34,7 +34,7 @@ switch ($method) {
           exit(0);
         } else {
           $msg['msg'] = 'Stats already requested. Ignoring command.';
-          echo json_decode($msg);
+          echo json_encode($msg);
           exit(0);
         }
         break;
