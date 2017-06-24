@@ -222,7 +222,7 @@ echo "
           formData.append('fn', 'addPokemon');
           formData.append('pokemon', this.value);
           formData.append('id', this.getAttribute('data-raid-id'));
-          fetch('/index.php', {
+          fetch('index.php', {
             method: 'POST',
             body: formData
           });
