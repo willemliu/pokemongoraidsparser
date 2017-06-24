@@ -151,7 +151,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   </h2>
   ";
   if(isset($row['gym']) && strlen($row['gym']) > 0) {
-    echo "<div class='gym'>{$row['gym']}</div>";
+    echo "<div class='gym'>Gym: {$row['gym']}</div>";
   }
   echo "<time datetime='{$row['datetime']}'>{$row['datetime']}</time>";
   $stmt2 = $dbh->prepare("SELECT * FROM users u
