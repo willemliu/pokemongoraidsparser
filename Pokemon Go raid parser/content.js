@@ -29,6 +29,7 @@ chrome.storage.sync.get({
                 formData.append('minutes', matches[4]);
                 formData.append('location', matches[5]);
                 if(matches.length > 6) {
+                  formData.append('gym', matches[6]);
                 }
                 fetch('https://pogo.moviesom.com/index.php', {
                   method: 'POST',
