@@ -142,7 +142,7 @@ echo "<!doctype html>
           margin-bottom: 1rem;
         }
         
-        .pokemon-boss-name {
+        input[name='pokemon-boss-name']
           width: 100%;
           box-sizing: border-box;
         }
