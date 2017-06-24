@@ -29,7 +29,8 @@ switch ($method) {
         break;
       case 'stats':
         if(logCommand($_REQUEST)) {
-          stats();
+          echo stats();
+          exit(0);
         } else {
           echo 'Stats already requested. Ignoring command.';
           exit(0);
@@ -144,7 +145,28 @@ function logCommand($request) {
 }
 
 function stats() {
-  
+  global $dbh;
+  $result = false;
+  try {
+    if ($dbh->inTransaction() === false) {
+      $dbh->beginTransaction();
+    }
+
+    $stmt = $dbh->prepare("SELECT COUNT(*) raid_count, username FROM willim_pokemongo.users WHERE username != '' GROUP BY username ORDER BY raid_count DESC");
+    $stmt->execute();
+
+    $results = [];
+    $results['users'] = [];
+    $results['users']['raid_count'] = [];
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      array_push($results['users']['raid_count'], $row);
+    }
+    $result = $dbh->commit();
+    return json_encode($results);
+  }
+  catch(PDOException $e) {
+    echo $e . PHP_EOL;
+  }
 }
 
 echo "<!doctype html>
