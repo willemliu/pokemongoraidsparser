@@ -19,6 +19,9 @@ switch ($method) {
       case 'addRaid':
         addRaid($_REQUEST);
         break;
+      case 'addPokemon':
+        addPokemon($_REQUEST);
+        break;
     }
     break;
   case 'GET':
@@ -47,6 +50,24 @@ function addRaid($request) {
     $stmt->bindParam(":datetime", $today->format('Y-m-d H:i:s'), PDO::PARAM_STR);
     $stmt->bindParam(":location", $request['location'], PDO::PARAM_STR);
     $stmt->bindParam(":gym", $request['gym'], PDO::PARAM_STR);
+    $stmt->execute();
+    $dbh->commit();
+  }
+  catch(PDOException $e) {
+      echo $e . PHP_EOL;
+  }
+  exit(0);
+}
+
+function addPokemon($request) {
+  global $dbh;
+  try {
+    if ($dbh->inTransaction() === false) {
+      $dbh->beginTransaction();
+    }
+    $stmt = $dbh->prepare("UPDATE raids SET pokemon=:pokemon WHERE id=:id");
+    $stmt->bindParam(":pokemon", $request['pokemon'], PDO::PARAM_STR);
+    $stmt->bindParam(":id", $request['id'], PDO::PARAM_INT);
     $stmt->execute();
     $dbh->commit();
   }
@@ -114,12 +135,15 @@ echo "<!doctype html>
           border-color: purple;
         }
         
-        #username {
+        input[type='text'] {
           padding: 0.5rem 1rem;
           border-radius: 5px;
           border-color: lightgray;
-          min-width: 400px;
           margin-bottom: 1rem;
+        }
+        
+        #username {
+          min-width: 400px;
         } 
         time { 
           display: block; 
@@ -147,12 +171,13 @@ $stmt = $dbh->prepare("SELECT * FROM raids r
                               ORDER BY r.datetime DESC");
 $stmt->execute();
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-  $htmlLocation = $row['location'];
   $htmlLocation = str_replace("'", "&#39;", $row['location']);
+  $htmlPokemon = str_replace("'", "&#39;", $row['pokemon']);
   echo "<form class='raid lvl{$row['lvl']}' method='POST' action='/'>";
   echo "<h2>[{$row['lvl']}] 
     <a href='https://maps.google.com/?q={$htmlLocation}' target='_blank'>{$row['location']}</a>
   </h2>
+  <input type='text' name='pokemon-boss-name' data-raid-id='{$row['id']}' placeholder='Pokemon raid boss name' value='{$htmlPokemon}' />
   ";
   if(isset($row['gym']) && strlen($row['gym']) > 0) {
     echo "<div class='gym'>Gym: {$row['gym']}</div>";
@@ -183,6 +208,23 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 echo "
   <script>
+    var pokemonsEl = document.querySelectorAll('.pokemon-boss-name');
+    for(let idx in pokemonsEl) {
+      if(pokemonsEl.hasOwnProperty(idx)) {
+        pokemonEls[idx].addEventListener('change', function() {
+          var formData = new FormData();
+          formData.append('fn', 'addPokemon');
+          formData.append('pokemon', this.value);
+          formData.append('id', this.getAttribute('data-raid-id'));
+          fetch('/index.php', {
+            method: 'POST',
+            body: formData
+          });
+
+        });
+      }
+    };
+    
     var usernameEl = document.getElementById('username');
     usernameEl.addEventListener('keyup', function() {
       var unNodeList = document.querySelectorAll('.username');
