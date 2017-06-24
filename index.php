@@ -213,10 +213,11 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 echo "
   <script>
-    var pokemonsEl = document.querySelectorAll('.pokemon-boss-name');
+    var pokemonsEl = document.querySelectorAll('[name=\'pokemonBossName\']');
     for(let idx in pokemonsEl) {
       if(pokemonsEl.hasOwnProperty(idx)) {
         pokemonEls[idx].addEventListener('change', function() {
+          console.log(this);
           var formData = new FormData();
           formData.append('fn', 'addPokemon');
           formData.append('pokemon', this.value);
