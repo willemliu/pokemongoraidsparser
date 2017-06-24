@@ -121,6 +121,10 @@ echo "<!doctype html>
           min-width: 400px;
           margin-bottom: 1rem;
         } 
+        time {
+          display: block;
+          font-size: .8rem;
+        }
       </style>
     </head>
     <body>
@@ -143,9 +147,11 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   $htmlLocation = str_replace("'", "&#39;", $row['location']);
   echo "<form class='raid lvl{$row['lvl']}' method='POST' action='/'>";
   echo "<h2>[{$row['lvl']}] 
-  <a href='https://maps.google.com/?q={$htmlLocation}' target='_blank'>{$row['location']}</a> -
-  Gym: {$row['gym']}
-  </h2>";
+    <a href='https://maps.google.com/?q={$htmlLocation}' target='_blank'>{$row['location']}</a>
+  </h2>
+  <div class='gym'>Gym: {$row['gym']}</div>
+  <time datetime='{$row['datetime']}'>Time: {$row['datetime']}</time>
+  ";
   echo "<time datetime='{$row['datetime']}'>{$row['datetime']}</time>";
   $stmt2 = $dbh->prepare("SELECT * FROM users u
                               WHERE raid_id=:raid_id
