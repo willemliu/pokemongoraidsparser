@@ -73,6 +73,9 @@ function stats(time, matches) {
   .then((resp) => resp.json())
   .then((data) => {
     console.log(data);
+    if(data.user) {
+      console.log(data.user.username, data.user.raid_count);
+    }
   });
 }
 
