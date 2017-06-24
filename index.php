@@ -307,7 +307,7 @@ echo "
       var distance = end - now;
       if (distance < 0) {
         clearInterval(timer);
-        document.getElementById('countdown').innerHTML = 'EXPIRED!';
+        el.innerHTML = 'EXPIRED!';
         return;
       }
       var days = Math.floor(distance / _day);
