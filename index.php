@@ -217,7 +217,6 @@ echo "
     for(let idx in pokemonsEl) {
       if(pokemonsEl.hasOwnProperty(idx)) {
         pokemonsEl[idx].addEventListener('change', function() {
-          console.log(this);
           var formData = new FormData();
           formData.append('fn', 'addPokemon');
           formData.append('pokemon', this.value);
@@ -239,7 +238,6 @@ echo "
           var unEl = unNodeList[idx];
           unEl.value = usernameEl.value;
           localStorage['username'] = usernameEl.value;
-          console.debug(usernameEl.value);
         }
       }
     });
