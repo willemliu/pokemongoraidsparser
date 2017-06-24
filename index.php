@@ -107,11 +107,12 @@ function logCommand($request) {
     $today = new DateTime();
     $today->setTimezone($tz_object);
     $times = explode(':', $request['time']);
-    $today->setTime($times[0], $times[1]);
+    $today->setTime(intval($times[0]), intval($times[1]));
 
     $stmt = $dbh->prepare("INSERT IGNORE INTO command_log 
                              (command) VALUES (:command)");
-    $stmt->bindParam(":command", $today->format('Y-m-d H:i:s') . $request['string'], PDO::PARAM_STR);
+    $command = $today->format('Y-m-d H:i:s') . $request['string'];
+    $stmt->bindParam(":command", $command, PDO::PARAM_STR);
     $stmt->execute();
     return $dbh->commit();
   }
