@@ -300,13 +300,11 @@ echo "
     var _minute = _second * 60;
     var _hour = _minute * 60;
     var _day = _hour * 24;
-    var timer;
 
     function showRemaining(end, el) {
       var now = new Date();
       var distance = end - now;
       if (distance < 0) {
-        clearInterval(timer);
         el.innerHTML = 'EXPIRED!';
         return;
       }
