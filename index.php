@@ -159,8 +159,16 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                               ORDER BY u.added ASC");
   $stmt2->bindParam(":raid_id", $row['id'], PDO::PARAM_STR);
   $stmt2->execute();
+  $first = true;
   while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+    if($first) {
+      $first = false;
+      echo "<fieldset><legend>Raiders:</legend>";
+    }
     echo "<div class='user'>{$row2['username']}</div>";
+  }
+  if(!$first) {
+    echo "</fieldset>";
   }
   echo "<input type='submit' name='join' value='Join raid' />";
   echo "<input type='hidden' name='id' value='{$row['id']}' />";
