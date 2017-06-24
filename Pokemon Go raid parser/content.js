@@ -69,6 +69,10 @@ function stats(time, matches) {
   fetch('https://pogo.moviesom.com/index.php', {
     method: 'POST',
     body: formData
+  })
+  .then((resp) => resp.json())
+  .then((data) => {
+    console.log(data);
   });
 }
 
