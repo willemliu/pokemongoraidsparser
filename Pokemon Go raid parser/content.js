@@ -15,7 +15,7 @@ chrome.storage.sync.get({
           if(msgText) {
             const txt = getTextContentExceptScript(msgText);
             let matches = regexp.exec(txt);
-            if(matches && matches.length >== 6) {
+            if(matches && matches.length >= 6) {
               console.log(matches[0]);
               let currentTime = parseInt(d.getHours()-2 + '' + d.getMinutes());
               let raidTime = parseInt(matches[3] + '' + matches[4]);
