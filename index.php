@@ -21,6 +21,7 @@ switch ($method) {
           addRaid($_REQUEST);
         } else {
           echo 'Raid already added. Ignoring command.';
+          exit(0);
         }
         break;
       case 'addPokemon':
@@ -101,6 +102,7 @@ function joinRaid($request) {
 
 function logCommand($request) {
   global $dbh;
+  $result = false;
   try {
     if ($dbh->inTransaction() === false) {
       $dbh->beginTransaction();
@@ -108,19 +110,29 @@ function logCommand($request) {
     $tz_object = new DateTimeZone('Europe/Amsterdam');
     $today = new DateTime();
     $today->setTimezone($tz_object);
-    $times = explode(':', $request['time']);
+    $times = explode(':', $request['msgTime']);
     $today->setTime(intval($times[0]), intval($times[1]));
-
-    $stmt = $dbh->prepare("INSERT INTO command_log 
-                             (command) VALUES (:command)");
     $command = $today->format('Y-m-d H:i:s') . $request['string'];
+
+    $stmt = $dbh->prepare("SELECT id FROM command_log
+                             WHERE command=:command");
     $stmt->bindParam(":command", $command, PDO::PARAM_STR);
     $stmt->execute();
-    return $dbh->commit();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      return $result;
+    }
+    $stmt = $dbh->prepare("INSERT INTO command_log 
+                             (command) VALUES (:command)");
+    $stmt->bindParam(":command", $command, PDO::PARAM_STR);
+    $stmt->execute();
+    
+    $result = $dbh->commit();
   }
   catch(PDOException $e) {
-    return false;
+    echo $e . PHP_EOL;
   }
+  return $result;
 }
 
 echo "<!doctype html>
