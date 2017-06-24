@@ -19,6 +19,8 @@ switch ($method) {
       case 'addRaid':
         if(logCommand($_REQUEST)) {
           addRaid($_REQUEST);
+        } else {
+          echo 'Raid already added. Ignoring command.';
         }
         break;
       case 'addPokemon':
