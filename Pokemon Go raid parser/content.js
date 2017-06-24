@@ -14,14 +14,18 @@ chrome.storage.sync.get({
           let msgText = message.querySelector('.selectable-text');
           if(msgText) {
             const txt = getTextContentExceptScript(msgText);
+            if(msgText.parentNode) {
+              time = (msgText.parentNode && msgText.parentNode.parentNode && msgText.parentNode.parentNode.querySelector('.message-datetime')) ? msgText.parentNode.parentNode.querySelector('.message-datetime').innerHTML: '';
+            }
             let matches = regexp.exec(txt);
             if(matches && matches.length >= 6) {
-              console.log(matches[0]);
+              console.log(time, matches[0]);
               let currentTime = parseInt(d.getHours()-2 + '' + d.getMinutes());
               let raidTime = parseInt(matches[3] + '' + matches[4]);
               if(raidTime > currentTime) {
                 let formData = new FormData();
                 formData.append('fn', 'addRaid');
+                formData.append('msgTime', time);
                 formData.append('string', matches[0]);
                 formData.append('command', matches[1]);
                 formData.append('lvl', matches[2]);

@@ -17,7 +17,9 @@ switch ($method) {
         joinRaid($_REQUEST);
         break;
       case 'addRaid':
-        addRaid($_REQUEST);
+        if(logCommand($_REQUEST)) {
+          addRaid($_REQUEST);
+        }
         break;
       case 'addPokemon':
         addPokemon($_REQUEST);
@@ -92,6 +94,29 @@ function joinRaid($request) {
   }
   catch(PDOException $e) {
       echo $e . PHP_EOL;
+  }
+}
+
+function logCommand($request) {
+  global $dbh;
+  try {
+    if ($dbh->inTransaction() === false) {
+      $dbh->beginTransaction();
+    }
+    $tz_object = new DateTimeZone('Europe/Amsterdam');
+    $today = new DateTime();
+    $today->setTimezone($tz_object);
+    $times = $request['time'].split(':');
+    $today->setTime($times[0], $times[1]);
+
+    $stmt = $dbh->prepare("INSERT IGNORE INTO command_log 
+                             (command) VALUES (:command)");
+    $stmt->bindParam(":command", $today->format('Y-m-d H:i:s') . $request['string'], PDO::PARAM_STR);
+    $stmt->execute();
+    return $dbh->commit();
+  }
+  catch(PDOException $e) {
+    exit(1);
   }
 }
 
@@ -179,7 +204,10 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   $htmlLocation = str_replace("'", "&#39;", $row['location']);
   $htmlPokemon = str_replace("'", "&#39;", $row['pokemon']);
   echo "<form class='raid lvl{$row['lvl']}' method='POST' action='/'>";
-  echo "<h2>[{$row['lvl']}] 
+  
+  echo "
+  <time class='countdown'></time>
+  <h2>[{$row['lvl']}] 
     <a href='https://maps.google.com/?q={$htmlLocation}' target='_blank'>{$row['location']}</a>
   </h2>
   <input type='text' name='pokemonBossName' data-raid-id='{$row['id']}' placeholder='Pokemon raid boss name' value='{$htmlPokemon}' />
@@ -264,6 +292,39 @@ echo "
         el.fireEvent('on'+e.eventType, e);
       }
     }
+    
+    var _second = 1000;
+    var _minute = _second * 60;
+    var _hour = _minute * 60;
+    var _day = _hour * 24;
+    var timer;
+
+    function showRemaining(end, el) {
+      var now = new Date();
+      var distance = end - now;
+      if (distance < 0) {
+        clearInterval(timer);
+        document.getElementById('countdown').innerHTML = 'EXPIRED!';
+        return;
+      }
+      var days = Math.floor(distance / _day);
+      var hours = Math.floor((distance % _day) / _hour);
+      var minutes = Math.floor((distance % _hour) / _minute);
+      var seconds = Math.floor((distance % _minute) / _second);
+
+      el.innerHTML = days + 'd ' + hours + 'h ' + minutes + 'm ' + seconds + 's';
+    }
+    
+    setInterval(function() {
+      var raids = document.querySelectorAll('.raid');
+      for(var idx in raids) {
+        if(raids.hasOwnProperty(idx)) {
+          var raid = raids[idx];
+          var dateTime = raid.querySelector('time[datetime]');
+          showRemaining(dateTime, raid.querySelector('time.countdown'));
+        }
+      }
+    }, 2000);
   </script>
 ";
 echo "</div></body></html>";
