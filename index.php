@@ -27,6 +27,14 @@ switch ($method) {
       case 'addPokemon':
         addPokemon($_REQUEST);
         break;
+      case 'stats':
+        if(logCommand($_REQUEST)) {
+          stats();
+        } else {
+          echo 'Stats already requested. Ignoring command.';
+          exit(0);
+        }
+        break
     }
     break;
   case 'GET':
@@ -133,6 +141,10 @@ function logCommand($request) {
     echo $e . PHP_EOL;
   }
   return $result;
+}
+
+function stats() {
+  
 }
 
 echo "<!doctype html>
