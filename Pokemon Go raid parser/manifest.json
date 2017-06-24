@@ -1,0 +1,49 @@
+{
+  "manifest_version": 2,
+  "name": "Pokemon Go raid parser",
+  "version": "0.1",
+  "description": "Intended for internal use.",
+	"developer": {
+    "name": "Willem Liu",
+    "url": "https://www.willemliu.nl"
+  },
+  "icons": {
+    "48": "48x48.png",
+    "64": "64x64.png",
+    "72": "72x72.png",
+    "96": "96x96.png",
+    "128": "128x128.png",
+    "144": "144x144.png",
+    "168": "168x168.png",
+    "192": "192x192.png"
+  },
+  "browser_action": {
+    "default_icon": {
+      "48": "48x48.png",
+      "64": "64x64.png",
+      "72": "72x72.png",
+      "96": "96x96.png",
+      "128": "128x128.png",
+      "144": "144x144.png",
+      "168": "168x168.png",
+      "192": "192x192.png"
+    }
+  },
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "permissions": [
+    "storage",
+    "tabs"
+  ],
+  "options_ui": {
+    "page": "options.html",
+    "chrome_style": true
+  },
+  "content_scripts": [{
+    "matches": [
+      "https://web.whatsapp.com/*"
+    ],
+    "js": ["content.js"]
+  }]
+}

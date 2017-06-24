@@ -1,0 +1,64 @@
+<?php
+  /**
+   * DB class
+   */
+  final class DB
+  {
+    private $connection = 0;
+    private $host = "127.0.0.1";
+    private $dbname = "dbname";
+    private $user = "username";
+    private $pass = "password";
+    private $options = array(
+      PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
+    );
+    private $dbh;
+    private $queryCount = 0;
+
+    /**
+     * Return the logged query count. This isn't accurate.
+     */
+    public function getQueryCount() {
+      return $this->queryCount;
+    }
+    
+    /**
+     * Increment query count by 1.
+     */
+    public function incrementQueryCount() {
+      $this->queryCount++;
+    }
+    
+    public function connect() {
+      try {
+        if($this->dbh == null) {
+          # MS SQL Server and Sybase with PDO_DBLIB  
+          //$this->DBH = new PDO("mssql:host=$host;dbname=$dbname, $user, $pass");  
+          //$this->DBH = new PDO("sybase:host=$host;dbname=$dbname, $user, $pass");  
+
+          # MySQL with PDO_MYSQL  
+          $this->dbh = new PDO("mysql:host=$this->host;dbname=$this->dbname", $this->user, $this->pass, $this->options);  
+
+          # SQLite Database  
+          //$this->DBH = new PDO("sqlite:my/database/path/database.db");  
+        }
+        return $this->dbh;
+      }  
+      catch(PDOException $e) {  
+        throw $e;
+      }
+    }
+    
+    public function disconnect() {
+      $this->dbh = null;  
+    }
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+    }
+  }
+?>
+
