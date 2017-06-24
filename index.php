@@ -34,7 +34,7 @@ switch ($method) {
           echo 'Stats already requested. Ignoring command.';
           exit(0);
         }
-        break
+        break;
     }
     break;
   case 'GET':
