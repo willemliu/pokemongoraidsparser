@@ -29,7 +29,7 @@ switch ($method) {
         break;
       case 'stats':
         if(logCommand($_REQUEST)) {
-          echo stats();
+          echo stats($_REQUEST);
           exit(0);
         } else {
           echo 'Stats already requested. Ignoring command.';
@@ -144,7 +144,7 @@ function logCommand($request) {
   return $result;
 }
 
-function stats() {
+function stats($request) {
   global $dbh;
   $result = false;
   try {
@@ -152,11 +152,12 @@ function stats() {
       $dbh->beginTransaction();
     }
 
-    $stmt = $dbh->prepare("SELECT COUNT(*) raid_count, username FROM willim_pokemongo.users WHERE username != '' GROUP BY username ORDER BY raid_count DESC");
+    $stmt = $dbh->prepare("SELECT COUNT(*) raid_count, username FROM willim_pokemongo.users WHERE username=:username GROUP BY username ORDER BY raid_count DESC");
+    $stmt->bindParam(":username", $request['username'], PDO::PARAM_STR);
     $stmt->execute();
 
     $results = [];
-    $results['users'] = [];
+    $results['user'] = [];
     $results['users']['raid_count'] = [];
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       array_push($results['users']['raid_count'], $row);

@@ -1,5 +1,5 @@
 const raidExp = /^(\/raid),(\d),(\d\d):*(\d\d),(.*),(.*)$/gim;
-const statsExp = /^(\/stats)$/gim;
+const statsExp = /^(\/stats),(.*)$/gim;
 
 chrome.storage.sync.get({
   enable: true,
@@ -65,6 +65,7 @@ function stats(time, matches) {
   formData.append('msgTime', time);
   formData.append('string', matches[0]);
   formData.append('command', matches[1]);
+  formData.append('username', matches[2]);
   fetch('https://pogo.moviesom.com/index.php', {
     method: 'POST',
     body: formData
