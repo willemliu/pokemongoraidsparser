@@ -1,6 +1,8 @@
+CREATE DATABASE  IF NOT EXISTS `willim_pokemongo` /*!40100 DEFAULT CHARACTER SET latin1 */;
+USE `willim_pokemongo`;
 -- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
 --
--- Host:     Database: 
+-- Host:     Database: willim_pokemongo
 -- ------------------------------------------------------
 -- Server version	5.6.33-0ubuntu0.14.04.1
 
@@ -29,9 +31,10 @@ CREATE TABLE `raids` (
   `datetime` datetime NOT NULL,
   `location` varchar(255) NOT NULL,
   `gym` varchar(255) DEFAULT NULL,
+  `pokemon` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique` (`lvl`,`datetime`,`location`)
-) ENGINE=InnoDB AUTO_INCREMENT=1276 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1352 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -48,7 +51,7 @@ CREATE TABLE `users` (
   `added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique` (`raid_id`,`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -60,4 +63,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-06-24 17:04:35
+-- Dump completed on 2017-06-24 17:34:35
