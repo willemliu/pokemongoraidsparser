@@ -124,6 +124,10 @@ echo "<!doctype html>
         time { 
           display: block; 
           font-size: .8rem;
+          margin: 0 0 1rem 0;
+        }
+        fieldset {
+          margin: 1rem 0;
         }
       </style>
     </head>
