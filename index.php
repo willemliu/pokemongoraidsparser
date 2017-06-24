@@ -106,7 +106,7 @@ function logCommand($request) {
     $tz_object = new DateTimeZone('Europe/Amsterdam');
     $today = new DateTime();
     $today->setTimezone($tz_object);
-    $times = $request['time'].split(':');
+    $times = explode(':', $request['time']);
     $today->setTime($times[0], $times[1]);
 
     $stmt = $dbh->prepare("INSERT IGNORE INTO command_log 
