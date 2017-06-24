@@ -119,7 +119,7 @@ function logCommand($request) {
     return $dbh->commit();
   }
   catch(PDOException $e) {
-    exit(1);
+    return false;
   }
 }
 
