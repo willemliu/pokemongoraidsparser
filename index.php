@@ -323,7 +323,7 @@ echo "
       for(var idx in raids) {
         if(raids.hasOwnProperty(idx)) {
           var raid = raids[idx];
-          var dateTime = new Date(raid.querySelector('time[datetime]'));
+          var dateTime = new Date(raid.querySelector('time[datetime]').getAttribute('datetime'));
           showRemaining(dateTime, raid.querySelector('time.countdown'));
         }
       }
