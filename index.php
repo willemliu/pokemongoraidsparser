@@ -20,7 +20,8 @@ switch ($method) {
         if(logCommand($_REQUEST)) {
           addRaid($_REQUEST);
         } else {
-          echo "{'msg': 'Raid already added. Ignoring command.'}";
+          $msg['msg'] = 'Raid already added. Ignoring command.';
+          echo json_decode($msg);
           exit(0);
         }
         break;
@@ -32,7 +33,8 @@ switch ($method) {
           echo stats($_REQUEST);
           exit(0);
         } else {
-          echo "{'msg': 'Stats already requested. Ignoring command.'}";
+          $msg['msg'] = 'Stats already requested. Ignoring command.';
+          echo json_decode($msg);
           exit(0);
         }
         break;
