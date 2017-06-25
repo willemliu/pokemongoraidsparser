@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Pokemon Go raid parser",
-  "version": "0.1",
+  "version": "0.3",
   "description": "Intended for internal use.",
 	"developer": {
     "name": "Willem Liu",

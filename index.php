@@ -363,7 +363,7 @@ echo "
       var minutes = Math.floor((distance % _hour) / _minute);
       var seconds = Math.floor((distance % _minute) / _second);
 
-      el.innerHTML = days + 'd ' + hours + 'h ' + minutes + 'm ' + seconds + 's';
+      el.innerHTML = hours + 'h ' + minutes + 'm ' + seconds + 's';
     }
     
     setInterval(function() {

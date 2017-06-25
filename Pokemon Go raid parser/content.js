@@ -1,4 +1,5 @@
-const raidExp = /^(\/raid),(\d),(\d\d):*(\d\d),(.*),(.*)$/gim;
+const raidExp = /^(\/raid),\s*(\d),\s*(\d\d):*(\d\d),\s*(.*)/gim;
+const raidExp2 = /^(\/raid),\s*(\d),\s*(\d\d):*(\d\d),\s*(.*),\s*(.*)/gim;
 const statsExp = /^(\/stats),(.*)$/gim;
 
 chrome.storage.sync.get({
@@ -8,6 +9,7 @@ chrome.storage.sync.get({
   if(items.enable) {
     setInterval(function() {
       let messages = document.querySelectorAll('.msg');
+      console.debug('Parsing', messages.length);
       for(let idx in messages) {
         if(messages.hasOwnProperty(idx)) {
           let message = messages[idx];
@@ -18,12 +20,18 @@ chrome.storage.sync.get({
             if(msgText.parentNode) {
               time = (msgText.parentNode && msgText.parentNode.parentNode && msgText.parentNode.parentNode.querySelector('.message-datetime')) ? msgText.parentNode.parentNode.querySelector('.message-datetime').innerHTML: '';
             }
-            let matches = raidExp.exec(txt);
+            let matches = [];
+            if(txt.match(raidExp2)) {
+              matches = raidExp2.exec(txt);
+            } else {
+              matches = raidExp.exec(txt);
+            }
             if(matches && matches.length >= 6) {
               addRaid(time, matches);
             }
             matches = statsExp.exec(txt);
             if(matches && matches.length > 0) {
+              console.debug('Stats');
               stats(time, matches);
             }
           }
