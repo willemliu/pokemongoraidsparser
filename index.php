@@ -239,7 +239,7 @@ echo "<!doctype html>
       </style>
     </head>
     <body>
-      <h1>Pokemon Go Team Instinct Amsterdam raids</h1>
+      <h1>Pokemon Go Amsterdam raids</h1>
       <p>Usage in Whatsapp Raid group: /raid,&lt;lvl&gt;,&lt;time&gt;,&lt;location&gt;[,gym]<br/>
       Example: /raid,2,1430,Amstelstation<br>
       Example2: /raid,2,1430,Jacob Bontiusplaats 1,Roest</p>
