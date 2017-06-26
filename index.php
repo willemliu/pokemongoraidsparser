@@ -298,7 +298,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   <h2>[{$row['lvl']}] 
     <a href='{$row['direction']}' target='_blank'>{$row['gym']}</a>
   </h2>
-  <input type='text' name='pokemonBossName' data-raid-id='{$row['id']}' placeholder='Pokemon raid boss name' value='{$htmlPokemon}' />
+  <h3>Pokemon: {$htmlPokemon}'</h3>
   ";
   echo "<time datetime='{$row['start']}'>Start: {$row['start']}</time>";
   echo "<time class='endTime' datetime='{$row['end']}'>end: {$row['end']}</time>";
