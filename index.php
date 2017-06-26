@@ -288,7 +288,7 @@ $stmt = $dbh->prepare("SELECT * FROM raids2 r
 $stmt->execute();
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   $htmlPokemon = str_replace("'", "&#39;", $row['pokemon']);
-  $htmlPokemon = ($htmlPokemon)?$htmlPokemon:'??';
+  $htmlPokemon = ($htmlPokemon && strcasecmp($htmlPokemon, 'null') != 0)?$htmlPokemon:'??';
   echo "<form class='raid lvl{$row['lvl']}' method='POST' action='/'>";
   
   echo "
