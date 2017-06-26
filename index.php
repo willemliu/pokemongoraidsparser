@@ -78,30 +78,32 @@ function addRaid($request) {
   }
 }
 
-function addRaidData($request) {
+function addRaidData($request) {    
   global $dbh;
-  try {
-    if ($dbh->inTransaction() === false) {
-      $dbh->beginTransaction();
+  if(isset($request['gym']) && strlen($request['gym']) > 0) {
+    try {
+      if ($dbh->inTransaction() === false) {
+        $dbh->beginTransaction();
+      }
+      $stmt = $dbh->prepare("INSERT INTO raids2
+                               (gym, lvl, start, end, pokemon, direction) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction) 
+                               ON DUPLICATE KEY UPDATE pokemon=:pokemon, direction=:direction");
+      $tz_object = new DateTimeZone('Europe/Amsterdam');
+      $today = new DateTime();
+      $today->setTimezone($tz_object);
+      $today->setTime($request['hours'], $request['minutes']);
+      $stmt->bindParam(":gym", $request['gym'], PDO::PARAM_STR);
+      $stmt->bindParam(":lvl", $request['lvl'], PDO::PARAM_INT);
+      $stmt->bindParam(":start", $request['start'], PDO::PARAM_STR);
+      $stmt->bindParam(":end", $request['end'], PDO::PARAM_STR);
+      $stmt->bindParam(":pokemon", $request['pokemon'], PDO::PARAM_STR);
+      $stmt->bindParam(":direction", $request['direction'], PDO::PARAM_STR);
+      $stmt->execute();
+      $dbh->commit();
     }
-    $stmt = $dbh->prepare("INSERT INTO raids2
-                             (gym, lvl, start, end, pokemon, direction) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction) 
-                             ON DUPLICATE KEY UPDATE pokemon=:pokemon, direction=:direction");
-    $tz_object = new DateTimeZone('Europe/Amsterdam');
-    $today = new DateTime();
-    $today->setTimezone($tz_object);
-    $today->setTime($request['hours'], $request['minutes']);
-    $stmt->bindParam(":gym", $request['gym'], PDO::PARAM_STR);
-    $stmt->bindParam(":lvl", $request['lvl'], PDO::PARAM_INT);
-    $stmt->bindParam(":start", $request['start'], PDO::PARAM_STR);
-    $stmt->bindParam(":end", $request['end'], PDO::PARAM_STR);
-    $stmt->bindParam(":pokemon", $request['pokemon'], PDO::PARAM_STR);
-    $stmt->bindParam(":direction", $request['direction'], PDO::PARAM_STR);
-    $stmt->execute();
-    $dbh->commit();
-  }
-  catch(PDOException $e) {
-      echo $e . PHP_EOL;
+    catch(PDOException $e) {
+        echo $e . PHP_EOL;
+    }
   }
   exit(0);
 }
