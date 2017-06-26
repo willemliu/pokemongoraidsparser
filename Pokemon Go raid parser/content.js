@@ -23,7 +23,7 @@ function start() {
   jQuery('.dots:contains(....)').closest('.leaflet-marker-icon').show();
   
   var timeout = 0;
-  jQuery('.dots:contains(....)').each(function() {
+  jQuery('.dots:contains(....),.dots:contains(.....)').each(function() {
     var that = this;
     setTimeout(function() { parseData(that); }, timeout);
     timeout += 4000;
@@ -49,11 +49,11 @@ function parseData(el) {
     var lvl = lvlRegex.exec(txt);
     lvl = (lvl && lvl.length === 2)?lvl[1]:'4';
     var start = startRegex.exec(txt);
-    start = (start && start.length === 2)?start[1]:null;
+    start = (start && start.length === 2)?start[1]:'';
     var end = endRegex.exec(txt);
-    end = (end && end.length === 2)?end[1]:null;
+    end = (end && end.length === 2)?end[1]:'';
     var boss = bossRegex.exec(txt);
-    boss = (boss && boss.length === 2) ? boss[1] : null;
+    boss = (boss && boss.length === 2) ? boss[1] : '';
     var direction = jQuery('.sweet-alert > p > .popupfoot > a.button:first-child').attr('href');
     addLvl4Raid(gym, lvl, start, end, boss, direction);
     setTimeout(function() {jQuery('.sweet-alert .modal-close').click();}, 1000);
