@@ -80,7 +80,7 @@ function addRaid($request) {
 
 function addRaidData($request) {    
   global $dbh;
-  if(isset($request['start']) && isset($request['end']) && strlen($request['start']) > 0 && strlen($request['end']) > 0) {
+  if(isset($request['start']) && isset($request['end']) && strlen($request['start']) > 0 && strlen($request['end']) > 0 && $request['start'] != 'null' && $request['end'] != 'null') {
     try {
       if ($dbh->inTransaction() === false) {
         $dbh->beginTransaction();
@@ -285,26 +285,23 @@ echo "<!doctype html>
 ";
 
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-$stmt = $dbh->prepare("SELECT * FROM raids r
-                              WHERE datetime > DATE_ADD(NOW(), INTERVAL 1 HOUR)
+$stmt = $dbh->prepare("SELECT * FROM raids2 r
+                              WHERE `end` > DATE_ADD(NOW(), INTERVAL 1 HOUR)
                               ORDER BY r.datetime DESC");
 $stmt->execute();
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-  $htmlLocation = str_replace("'", "&#39;", $row['location']);
   $htmlPokemon = str_replace("'", "&#39;", $row['pokemon']);
   echo "<form class='raid lvl{$row['lvl']}' method='POST' action='/'>";
   
   echo "
   <time class='countdown'></time>
   <h2>[{$row['lvl']}] 
-    <a href='https://maps.google.com/?q={$htmlLocation}' target='_blank'>{$row['location']}</a>
+    <a href='{$row['direction']}' target='_blank'>{$row['gym']}</a>
   </h2>
   <input type='text' name='pokemonBossName' data-raid-id='{$row['id']}' placeholder='Pokemon raid boss name' value='{$htmlPokemon}' />
   ";
-  if(isset($row['gym']) && strlen($row['gym']) > 0) {
-    echo "<div class='gym'>Gym: {$row['gym']}</div>";
-  }
-  echo "<time datetime='{$row['datetime']}'>{$row['datetime']}</time>";
+  echo "<time datetime='{$row['start']}'>Start: {$row['start']}</time>";
+  echo "<time class='endTime' datetime='{$row['end']}'>end: {$row['start']}</time>";
   $stmt2 = $dbh->prepare("SELECT * FROM users u
                               WHERE raid_id=:raid_id
                               ORDER BY u.added ASC");
@@ -407,7 +404,7 @@ echo "
       for(var idx in raids) {
         if(raids.hasOwnProperty(idx)) {
           var raid = raids[idx];
-          var dateTime = new Date(raid.querySelector('time[datetime]').getAttribute('datetime'));
+          var dateTime = new Date(raid.querySelector('time.endTime').getAttribute('datetime'));
           showRemaining(dateTime, raid.querySelector('time.countdown'));
         }
       }
