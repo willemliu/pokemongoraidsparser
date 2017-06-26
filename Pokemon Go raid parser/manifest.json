@@ -42,8 +42,8 @@
   },
   "content_scripts": [{
     "matches": [
-      "https://web.whatsapp.com/*"
+      "https://gymhuntr.com/*"
     ],
-    "js": ["content.js"]
+    "js": ["jquery-3.2.1.min.js", "content.js"]
   }]
 }

@@ -1,6 +1,7 @@
-const raidExp = /^(\/raid),\s*(\d),\s*(\d\d):*(\d\d),\s*(.*)/gim;
-const raidExp2 = /^(\/raid),\s*(\d),\s*(\d\d):*(\d\d),\s*(.*),\s*(.*)/gim;
-const statsExp = /^(\/stats),(.*)$/gim;
+var lvlRegex = /Raid\sLevel:\s(\d)/gim;
+var startRegex = /Raid\sstart:\s(\d{4}-\d{1,2}-\d{1,2}\s\d{1,2}:\d{1,2}:\d{1,2})/gim;
+var endRegex = /Raid\send:\s(\d{4}-\d{1,2}-\d{1,2}\s\d{1,2}:\d{1,2}:\d{1,2})/gim;
+var bossRegex = /Raid\sboss:\s(.+)\sCP:/gim;
 
 chrome.storage.sync.get({
   enable: true,
@@ -8,93 +9,69 @@ chrome.storage.sync.get({
   console.log('Pokemon Go raid parser enabled', items.enable);
   if(items.enable) {
     setInterval(function() {
-      let messages = document.querySelectorAll('.msg');
-      console.debug('Parsing', messages.length);
-      for(let idx in messages) {
-        if(messages.hasOwnProperty(idx)) {
-          let message = messages[idx];
-          let msgText = message.querySelector('.selectable-text');
-          if(msgText) {
-            const txt = getTextContentExceptScript(msgText);
-            let time = '';
-            if(msgText.parentNode) {
-              time = (msgText.parentNode && msgText.parentNode.parentNode && msgText.parentNode.parentNode.querySelector('.message-datetime')) ? msgText.parentNode.parentNode.querySelector('.message-datetime').innerHTML: '';
-            }
-            let matches = [];
-            if(txt.match(raidExp2)) {
-              matches = raidExp2.exec(txt);
-            } else {
-              matches = raidExp.exec(txt);
-            }
-            if(matches && matches.length >= 6) {
-              addRaid(time, matches);
-            }
-            matches = statsExp.exec(txt);
-            if(matches && matches.length > 0) {
-              console.debug('Stats');
-              stats(time, matches);
-            }
-          }
-        }
-      }
-    }, 10000);
+      start();    
+    }, 60000);
   }
+  setTimeout(function() {
+    start();    
+  }, 10000);
 });
 
+function start() {
+  console.debug('Parsing');
+  jQuery('.dots:not(:contains(....))').closest('.leaflet-marker-icon').hide();
+  jQuery('.dots:contains(....)').closest('.leaflet-marker-icon').show();
+  
+  var timeout = 0;
+  jQuery('.dots:contains(....)').each(function() {
+    var that = this;
+    setTimeout(function() { parseData(that); }, timeout);
+    timeout += 4000;
+  });
 
-function addRaid(time, matches) {
-  console.log(time, matches[0]);
-  var d = new Date();
-  let currentTime = parseInt(d.getHours()-2 + '' + d.getMinutes());
-  let raidTime = parseInt(matches[3] + '' + matches[4]);
-  if(raidTime > currentTime) {
-    let formData = new FormData();
-    formData.append('fn', 'addRaid');
-    formData.append('msgTime', time);
-    formData.append('string', matches[0]);
-    formData.append('command', matches[1]);
-    formData.append('lvl', matches[2]);
-    formData.append('hours', matches[3]);
-    formData.append('minutes', matches[4]);
-    formData.append('location', matches[5]);
-    if(matches.length > 6) {
-      formData.append('gym', matches[6]);
-    }
-    fetch('https://pogo.moviesom.com/index.php', {
-      method: 'POST',
-      body: formData
-    });
-  }
 }
 
-function stats(time, matches) {
-  let formData = new FormData();
-  formData.append('fn', 'stats');
-  formData.append('msgTime', time);
-  formData.append('string', matches[0]);
-  formData.append('command', matches[1]);
-  formData.append('username', matches[2]);
+function parseData(el) {
+  jQuery(el).closest('.leaflet-marker-icon').click();
+  setTimeout(function() {
+    var gym = jQuery(".sweet-alert > h2")
+        .clone()    //clone the element
+        .children() //select all the children
+        .remove()   //remove all the children
+        .end()  //again go back to selected element
+        .text();
+    var txt = jQuery('.sweet-alert > p').clone()    //clone the element
+        .children() //select all the children
+        .remove()   //remove all the children
+        .end()  //again go back to selected element
+        .text();
+    console.debug(txt);
+    var lvl = lvlRegex.exec(txt);
+    lvl = (lvl && lvl.length === 2)?lvl[1]:'4';
+    var start = startRegex.exec(txt);
+    start = (start && start.length === 2)?start[1]:null;
+    var end = endRegex.exec(txt);
+    end = (end && end.length === 2)?end[1]:null;
+    var boss = bossRegex.exec(txt);
+    boss = (boss && boss.length === 2) ? boss[1] : null;
+    var direction = jQuery('.sweet-alert > p > .popupfoot > a.button:first-child').attr('href');
+    addLvl4Raid(gym, lvl, start, end, boss, direction);
+    setTimeout(function() {jQuery('.sweet-alert .modal-close').click();}, 1000);
+  }, 2000);
+}
+
+function addLvl4Raid(gym, lvl, start, end, boss, direction) {
+  console.debug(gym, lvl, start, end, boss, direction);
+  var formData = new FormData();
+  formData.append('fn', 'addRaidData');
+  formData.append('gym', gym);
+  formData.append('lvl', lvl);
+  formData.append('start', start);
+  formData.append('end', end);
+  formData.append('boss', boss);
+  formData.append('direction', direction);
   fetch('https://pogo.moviesom.com/index.php', {
     method: 'POST',
     body: formData
-  })
-  .then((resp) => resp.json())
-  .then((data) => {
-    console.log(data);
-    if(data.user) {
-      console.log(data.user.username, data.user.raid_count);
-    }
   });
-}
-
-function getTextContentExceptScript(element) {
-  var text= [];
-  for (var i= 0, n= element.childNodes.length; i<n; i++) {
-    var child= element.childNodes[i];
-    if (child.nodeType===1)
-      text.push(getTextContentExceptScript(child));
-    else if (child.nodeType===3)
-      text.push(child.data);
-  }
-  return text.join(' ');
 }
