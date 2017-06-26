@@ -99,7 +99,7 @@ function addRaidData($request) {
       $stmt->bindParam(":lvl", $request['lvl'], PDO::PARAM_INT);
       $stmt->bindParam(":start", $request['start'], PDO::PARAM_STR);
       $stmt->bindParam(":end", $request['end'], PDO::PARAM_STR);
-      $stmt->bindParam(":pokemon", $request['pokemon'], PDO::PARAM_STR);
+      $stmt->bindParam(":pokemon", $request['boss'], PDO::PARAM_STR);
       $stmt->bindParam(":direction", $request['direction'], PDO::PARAM_STR);
       $stmt->execute();
       $dbh->commit();
