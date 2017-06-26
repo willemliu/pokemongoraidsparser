@@ -291,6 +291,7 @@ $stmt = $dbh->prepare("SELECT * FROM raids2 r
 $stmt->execute();
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   $htmlPokemon = str_replace("'", "&#39;", $row['pokemon']);
+  $htmlPokemon = ($htmlPokemon)?$htmlPokemon:'??';
   echo "<form class='raid lvl{$row['lvl']}' method='POST' action='/'>";
   
   echo "
@@ -298,7 +299,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   <h2>[{$row['lvl']}] 
     <a href='{$row['direction']}' target='_blank'>{$row['gym']}</a>
   </h2>
-  <h3>Pokemon: {$htmlPokemon}'</h3>
+  <h3>Boss: {$htmlPokemon}</h3>
   ";
   echo "<time datetime='{$row['start']}'>Start: {$row['start']}</time>";
   echo "<time class='endTime' datetime='{$row['end']}'>end: {$row['end']}</time>";
