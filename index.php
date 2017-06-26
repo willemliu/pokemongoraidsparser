@@ -287,7 +287,7 @@ echo "<!doctype html>
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $stmt = $dbh->prepare("SELECT * FROM raids2 r
                               WHERE `end` > DATE_ADD(NOW(), INTERVAL 1 HOUR)
-                              ORDER BY r.datetime DESC");
+                              ORDER BY r.end DESC");
 $stmt->execute();
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   $htmlPokemon = str_replace("'", "&#39;", $row['pokemon']);
@@ -301,7 +301,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   <input type='text' name='pokemonBossName' data-raid-id='{$row['id']}' placeholder='Pokemon raid boss name' value='{$htmlPokemon}' />
   ";
   echo "<time datetime='{$row['start']}'>Start: {$row['start']}</time>";
-  echo "<time class='endTime' datetime='{$row['end']}'>end: {$row['start']}</time>";
+  echo "<time class='endTime' datetime='{$row['end']}'>end: {$row['end']}</time>";
   $stmt2 = $dbh->prepare("SELECT * FROM users u
                               WHERE raid_id=:raid_id
                               ORDER BY u.added ASC");
