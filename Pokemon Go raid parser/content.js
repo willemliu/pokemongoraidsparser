@@ -56,7 +56,7 @@ function parseData(el) {
     boss = (boss && boss.length === 2) ? boss[1] : '';
     var direction = jQuery('.sweet-alert > p > .popupfoot > a.button:first-child').attr('href');
     var team = jQuery('.sweet-alert > p > .gym_team').text();
-    addLvl4Raid(gym, lvl, start, end, boss, direction);
+    addLvl4Raid(gym, lvl, start, end, boss, direction, team);
     setTimeout(function() {jQuery('.sweet-alert .modal-close').click();}, 1000);
   }, 2000);
 }
