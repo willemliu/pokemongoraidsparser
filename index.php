@@ -293,17 +293,23 @@ echo "<!doctype html>
         fieldset {
           margin: .5rem 0;
         }
+        .team-logo {
+          width: 48px;
+          height: 48px;
+          display: inline-block;
+          float: right;
+        }
         .team-Mystic {
           color: blue;
-          background: url(img/mystic48.png) no-repeat center center fixed;
+          background: url(img/mystic48.png) no-repeat center center;
         }
         .team-Instinct {
           color: yellow;
-          background: url(img/instinct48.png) no-repeat center center fixed;
+          background: url(img/instinct48.png) no-repeat center center;
         }
         .team-Valor {
           color: red;
-          background: url(img/valor48.png) no-repeat center center fixed;
+          background: url(img/valor48.png) no-repeat center center;
         }
       </style>
     </head>
@@ -327,7 +333,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   echo "
   <time class='countdown'>Calculating...</time>
   <h2>[{$row['lvl']}] 
-    <a href='{$row['direction']}' target='_blank'>{$row['gym']}</a> <span class='team-{$row['team']}'></span>
+    <a href='{$row['direction']}' target='_blank'>{$row['gym']}</a> <span class='team-logo team-{$row['team']}'></span>
   </h2>
   <h3>Boss: {$htmlPokemon}</h3>
   <select class='select-pokemon' data-raid-id='{$row['id']}'>
