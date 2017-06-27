@@ -229,9 +229,9 @@ echo "<!doctype html>
           flex: 1 1 auto;
           border: 3px solid yellow;
           border-radius: 5px;
-          padding: 1rem;
+          padding: .5rem;
           box-sizing: border-box;
-          margin: .5rem
+          margin: .1rem
         }
         .lvl1 {
           border-color: green;
@@ -253,24 +253,31 @@ echo "<!doctype html>
           padding: 0.5rem 1rem;
           border-radius: 5px;
           border-color: lightgray;
-          margin-bottom: 1rem;
-        }
-        
-        input[name='pokemonBossName'] {
-          width: 100%;
+          margin-bottom: .5rem;
           box-sizing: border-box;
         }
         
         #username {
           min-width: 400px;
+        }
+        h1 {
+          margin: .5rem 0;
+          font-size: 1rem;
+        } 
+        h2 {
+          margin: .5rem 0;
+          font-size: .8rem;
+        } 
+        h3 {
+          margin: .5rem 0;
         } 
         time { 
           display: block; 
           font-size: .8rem;
-          margin: 0 0 1rem 0;
+          margin: 0 0 5.rem 0;
         }
         fieldset {
-          margin: 1rem 0;
+          margin: .5rem 0;
         }
       </style>
     </head>
