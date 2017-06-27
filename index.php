@@ -87,11 +87,11 @@ function addRaidData($request) {
         $dbh->beginTransaction();
       }
       $query = "INSERT IGNORE INTO raids2
-                               (gym, lvl, start, end, pokemon, direction) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction)";
+                               (gym, lvl, start, end, pokemon, direction) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction, :address)";
       if(isset($request['boss']) && strlen($request['boss']) > 0) {
         $query = "INSERT INTO raids2
-                               (gym, lvl, start, end, pokemon, direction) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction)
-                               ON DUPLICATE KEY UPDATE pokemon=:pokemon, direction=:direction";
+                               (gym, lvl, start, end, pokemon, direction) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction, :address)
+                               ON DUPLICATE KEY UPDATE pokemon=:pokemon, gym=:gym, address=:address";
       }
       $stmt = $dbh->prepare($query);
       $tz_object = new DateTimeZone('Europe/Amsterdam');
@@ -101,12 +101,14 @@ function addRaidData($request) {
       if(strlen($request['gym']) === 0) {
         $request['gym'] = '??';
       }
+      $address = getAddressFromDirection($request['direction']);
       $stmt->bindParam(":gym", $request['gym'], PDO::PARAM_STR);
       $stmt->bindParam(":lvl", $request['lvl'], PDO::PARAM_INT);
       $stmt->bindParam(":start", $request['start'], PDO::PARAM_STR);
       $stmt->bindParam(":end", $request['end'], PDO::PARAM_STR);
       $stmt->bindParam(":pokemon", $request['boss'], PDO::PARAM_STR);
       $stmt->bindParam(":direction", $request['direction'], PDO::PARAM_STR);
+      $stmt->bindParam(":address", $address, PDO::PARAM_STR);
       $stmt->execute();
       $dbh->commit();
     }
@@ -115,6 +117,32 @@ function addRaidData($request) {
     }
   }
   exit(0);
+}
+
+function getAddressFromDirection($direction) {
+    $link_array = explode('/',$direction);
+    $latlng = end($link_array);
+    $ch = curl_init();
+
+    $headers  = array(
+      "Accept: text/html, application/xhtml+xml, */*",
+      "Accept-Language: en-US,en;q=0.8,zh-Hans-CN;q=0.5,zh-Hans;q=0.3"
+    );
+
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_URL, "https://maps.googleapis.com/maps/api/geocode/json?latlng={$latlng}&key=AIzaSyB_6vjPIExLAZgxk4vLVjnN5b8yEMIv03s");
+    curl_setopt($ch, CURLOPT_POST, false);
+    curl_setopt($ch, CURLOPT_ENCODING, 'gzip,deflate');
+    curl_setopt($ch, CURLOPT_TIMEOUT, 5000);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
+    curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; rv:11.0) like Gecko");
+    $result = curl_exec($ch);
+    curl_getinfo($ch);
+    curl_close($ch);
+    $resultArray = json_decode($result, true);
+    return $resultArray['results']['formatted_address'];
 }
 
 function addPokemon($request) {
