@@ -147,7 +147,10 @@ function getAddressFromDirection($direction) {
     curl_getinfo($ch);
     curl_close($ch);
     $resultArray = json_decode($result, true);
-    return $resultArray['results']['formatted_address'];
+    for($resultArray['results'] as $result) {
+        return $result['formatted_address'];
+    }
+    return null;
 }
 
 function addPokemon($request) {
