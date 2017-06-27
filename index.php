@@ -51,9 +51,20 @@ function addRaidData($request) {
       if ($dbh->inTransaction() === false) {
         $dbh->beginTransaction();
       }
-      $stmt = $dbh->prepare("INSERT INTO raids2
-                               (gym, lvl, start, end, pokemon, direction) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction) 
-                               ON DUPLICATE KEY UPDATE pokemon=:pokemon, direction=:direction");
+      $address = getAddressFromDirection($request['direction']);
+
+      $query = "INSERT INTO raids2
+                               (gym, lvl, start, end, pokemon, direction) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction, :address)";
+      if(isset($request['boss']) && strlen($request['boss']) > 0) {
+        $query = "INSERT INTO raids2
+                               (gym, lvl, start, end, pokemon, direction, address) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction, :address)
+                               ON DUPLICATE KEY UPDATE pokemon=:pokemon, gym=:gym, address=:address";
+      } else if(isset($address) && strlen($address) > 0) {
+        $query = "INSERT INTO raids2
+                               (gym, lvl, start, end, pokemon, direction, address) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction, :address)
+                               ON DUPLICATE KEY UPDATE gym=:gym, address=:address";
+      }
+      $stmt = $dbh->prepare($query);
       $tz_object = new DateTimeZone('Europe/Amsterdam');
       $today = new DateTime();
       $today->setTimezone($tz_object);
@@ -67,6 +78,7 @@ function addRaidData($request) {
       $stmt->bindParam(":end", $request['end'], PDO::PARAM_STR);
       $stmt->bindParam(":pokemon", $request['boss'], PDO::PARAM_STR);
       $stmt->bindParam(":direction", $request['direction'], PDO::PARAM_STR);
+      $stmt->bindParam(":address", $address, PDO::PARAM_STR);
       $stmt->execute();
       $dbh->commit();
     }
@@ -75,6 +87,35 @@ function addRaidData($request) {
     }
   }
   exit(0);
+}
+
+function getAddressFromDirection($direction) {
+    $link_array = explode('/',$direction);
+    $latlng = end($link_array);
+    $ch = curl_init();
+
+    $headers  = array(
+      "Accept: text/html, application/xhtml+xml, */*",
+      "Accept-Language: en-US,en;q=0.8,zh-Hans-CN;q=0.5,zh-Hans;q=0.3"
+    );
+
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_URL, "https://maps.googleapis.com/maps/api/geocode/json?latlng={$latlng}&key=AIzaSyB_6vjPIExLAZgxk4vLVjnN5b8yEMIv03s");
+    curl_setopt($ch, CURLOPT_POST, false);
+    curl_setopt($ch, CURLOPT_ENCODING, 'gzip,deflate');
+    curl_setopt($ch, CURLOPT_TIMEOUT, 5000);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
+    curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; rv:11.0) like Gecko");
+    $result = curl_exec($ch);
+    curl_getinfo($ch);
+    curl_close($ch);
+    $resultArray = json_decode($result, true);
+    foreach($resultArray['results'] as $res) {
+        return $res['formatted_address'];
+    }
+    return null;
 }
 
 function addPokemon($request) {
@@ -195,9 +236,9 @@ echo "<!doctype html>
           flex: 1 1 auto;
           border: 3px solid yellow;
           border-radius: 5px;
-          padding: 1rem;
+          padding: .5rem;
           box-sizing: border-box;
-          margin: .5rem
+          margin: .1rem
         }
         .lvl1 {
           border-color: green;
@@ -219,50 +260,64 @@ echo "<!doctype html>
           padding: 0.5rem 1rem;
           border-radius: 5px;
           border-color: lightgray;
-          margin-bottom: 1rem;
-        }
-        
-        input[name='pokemonBossName'] {
-          width: 100%;
+          margin-bottom: .5rem;
           box-sizing: border-box;
         }
         
         #username {
           min-width: 400px;
+        }
+        h1 {
+          margin: .5rem 0;
+          font-size: 1rem;
+        } 
+        h2 {
+          margin: .5rem 0;
+          font-size: .8rem;
+        }
+        .boss {
+          color: green;
+        }
+        .address {
+            font-size: .7rem;
+        }
+        h3 {
+          margin: .5rem 0;
         } 
         time { 
           display: block; 
           font-size: .8rem;
-          margin: 0 0 1rem 0;
+          margin: 0 0 5.rem 0;
         }
         fieldset {
-          margin: 1rem 0;
+          margin: .5rem 0;
         }
       </style>
     </head>
     <body>
       <h1>Pokemon Go Amsterdam raids</h1>
-      <label>Username: <input type='text' name='username' placeholder='Type your Pokemon Go name' value='' id='username' /></label>
+      <label>Username: <input type='text' name='username' placeholder='Type your Pokemon Go name' value='' id='username' autocomplete='off' /></label>
 
       <div class='raids'>
 ";
 
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $stmt = $dbh->prepare("SELECT * FROM raids2 r
-                              WHERE `end` > DATE_ADD(NOW(), INTERVAL 1 HOUR)
+                              WHERE `end` > DATE_ADD(NOW(), INTERVAL 2 HOUR)
                               ORDER BY r.end DESC");
 $stmt->execute();
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   $htmlPokemon = str_replace("'", "&#39;", $row['pokemon']);
-  $htmlPokemon = ($htmlPokemon && strcasecmp($htmlPokemon, 'null') != 0)?$htmlPokemon:'??';
+  $htmlPokemon = ($htmlPokemon && strcasecmp($htmlPokemon, 'null') != 0)?"<span class='boss'>{$htmlPokemon}</span>":'??';
   echo "<form class='raid lvl{$row['lvl']}' method='POST' action='/'>";
   
   echo "
-  <time class='countdown'></time>
+  <time class='countdown'>Calculating...</time>
   <h2>[{$row['lvl']}] 
     <a href='{$row['direction']}' target='_blank'>{$row['gym']}</a>
   </h2>
   <h3>Boss: {$htmlPokemon}</h3>
+  <div class='address'>{$row['address']}</div>
   ";
   echo "<time datetime='{$row['start']}'>Start: {$row['start']}</time>";
   echo "<time class='endTime' datetime='{$row['end']}'>end: {$row['end']}</time>";

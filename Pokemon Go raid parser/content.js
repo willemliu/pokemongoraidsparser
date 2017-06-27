@@ -1,6 +1,8 @@
 var lvlRegex = /Raid\sLevel:\s(\d)/gim;
 var startRegex = /Raid\sstart:\s(\d{4}-\d{1,2}-\d{1,2}\s\d{1,2}:\d{1,2}:\d{1,2})/gim;
+var startRegex2 = /Raid\sstart:\s(\d{1,2}-\d{1,2}-\d{4}\s\d{1,2}:\d{1,2}:\d{1,2})/gim;
 var endRegex = /Raid\send:\s(\d{4}-\d{1,2}-\d{1,2}\s\d{1,2}:\d{1,2}:\d{1,2})/gim;
+var endRegex2 = /Raid\send:\s(\d{1,2}-\d{1,2}-\d{4}\s\d{1,2}:\d{1,2}:\d{1,2})/gim;
 var bossRegex = /Raid\sboss:\s(.+)\sCP:/gim;
 
 chrome.storage.sync.get({
@@ -49,8 +51,14 @@ function parseData(el) {
     var lvl = lvlRegex.exec(txt);
     lvl = (lvl && lvl.length === 2)?lvl[1]:'4';
     var start = startRegex.exec(txt);
+    if(!start) {
+      start = startRegex2.exec(txt);
+    }
     start = (start && start.length === 2)?start[1]:'';
     var end = endRegex.exec(txt);
+    if(!end) {
+      end = endRegex2.exec(txt);
+    }
     end = (end && end.length === 2)?end[1]:'';
     var boss = bossRegex.exec(txt);
     boss = (boss && boss.length === 2) ? boss[1] : '';
