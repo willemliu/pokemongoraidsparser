@@ -78,6 +78,7 @@ function addRaid($request) {
   }
 }
 
+
 function addRaidData($request) {    
   global $dbh;
   if(isset($request['start']) && isset($request['end']) && strlen($request['start']) > 0 && strlen($request['end']) > 0 && $request['start'] != 'null' && $request['end'] != 'null') {
@@ -85,9 +86,14 @@ function addRaidData($request) {
       if ($dbh->inTransaction() === false) {
         $dbh->beginTransaction();
       }
-      $stmt = $dbh->prepare("INSERT INTO raids2
-                               (gym, lvl, start, end, pokemon, direction) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction) 
-                               ON DUPLICATE KEY UPDATE pokemon=:pokemon, direction=:direction");
+      $query = "INSERT IGNORE INTO raids2
+                               (gym, lvl, start, end, pokemon, direction) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction)";
+      if(isset($request['boss']) && strlen($request['boss']) > 0) {
+        $query = "INSERT INTO raids2
+                               (gym, lvl, start, end, pokemon, direction) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction)
+                               ON DUPLICATE KEY UPDATE pokemon=:pokemon, direction=:direction";
+      }
+      $stmt = $dbh->prepare($query);
       $tz_object = new DateTimeZone('Europe/Amsterdam');
       $today = new DateTime();
       $today->setTimezone($tz_object);
@@ -293,7 +299,7 @@ echo "<!doctype html>
 
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $stmt = $dbh->prepare("SELECT * FROM raids2 r
-                              WHERE `end` > NOW()
+                              WHERE `end` > DATE_ADD(NOW(), INTERVAL 2 HOUR)
                               ORDER BY r.end DESC");
 $stmt->execute();
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
