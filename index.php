@@ -86,12 +86,18 @@ function addRaidData($request) {
       if ($dbh->inTransaction() === false) {
         $dbh->beginTransaction();
       }
-      $query = "INSERT IGNORE INTO raids2
+      $address = getAddressFromDirection($request['direction']);
+
+      $query = "INSERT INTO raids2
                                (gym, lvl, start, end, pokemon, direction) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction, :address)";
       if(isset($request['boss']) && strlen($request['boss']) > 0) {
         $query = "INSERT INTO raids2
                                (gym, lvl, start, end, pokemon, direction) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction, :address)
                                ON DUPLICATE KEY UPDATE pokemon=:pokemon, gym=:gym, address=:address";
+      } else if(isset($address) && strlen($address) > 0) {
+        $query = "INSERT INTO raids2
+                               (gym, lvl, start, end, pokemon, direction) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction, :address)
+                               ON DUPLICATE KEY UPDATE gym=:gym, address=:address";
       }
       $stmt = $dbh->prepare($query);
       $tz_object = new DateTimeZone('Europe/Amsterdam');
@@ -101,7 +107,6 @@ function addRaidData($request) {
       if(strlen($request['gym']) === 0) {
         $request['gym'] = '??';
       }
-      $address = getAddressFromDirection($request['direction']);
       $stmt->bindParam(":gym", $request['gym'], PDO::PARAM_STR);
       $stmt->bindParam(":lvl", $request['lvl'], PDO::PARAM_INT);
       $stmt->bindParam(":start", $request['start'], PDO::PARAM_STR);
