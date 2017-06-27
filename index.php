@@ -54,15 +54,15 @@ function addRaidData($request) {
       $address = getAddressFromDirection($request['direction']);
 
       $query = "INSERT IGNORE INTO raids2
-                               (gym, lvl, start, end, pokemon, direction) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction, :address)";
+                               (gym, lvl, start, end, pokemon, direction, team) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction, :address, :team)";
       if(isset($request['boss']) && strlen($request['boss']) > 0 && $request['boss'] != 'null') {
         $query = "INSERT INTO raids2
-                               (gym, lvl, start, end, pokemon, direction, address) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction, :address)
-                               ON DUPLICATE KEY UPDATE pokemon=:pokemon, gym=:gym, address=:address";
+                               (gym, lvl, start, end, pokemon, direction, address, team) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction, :address, :team)
+                               ON DUPLICATE KEY UPDATE pokemon=:pokemon, gym=:gym, address=:address, team=:team";
       } else if(isset($address) && strlen($address) > 0) {
         $query = "INSERT INTO raids2
-                               (gym, lvl, start, end, pokemon, direction, address) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction, :address)
-                               ON DUPLICATE KEY UPDATE gym=:gym, address=:address";
+                               (gym, lvl, start, end, pokemon, direction, address, team) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction, :address, :team)
+                               ON DUPLICATE KEY UPDATE gym=:gym, address=:address, team=:team";
       }
       $stmt = $dbh->prepare($query);
       $tz_object = new DateTimeZone('Europe/Amsterdam');
@@ -79,6 +79,7 @@ function addRaidData($request) {
       $stmt->bindParam(":pokemon", $request['boss'], PDO::PARAM_STR);
       $stmt->bindParam(":direction", $request['direction'], PDO::PARAM_STR);
       $stmt->bindParam(":address", $address, PDO::PARAM_STR);
+      $stmt->bindParam(":team", $address, PDO::PARAM_STR);
       $stmt->execute();
       $dbh->commit();
     }

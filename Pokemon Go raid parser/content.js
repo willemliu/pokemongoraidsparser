@@ -55,13 +55,14 @@ function parseData(el) {
     var boss = bossRegex.exec(txt);
     boss = (boss && boss.length === 2) ? boss[1] : '';
     var direction = jQuery('.sweet-alert > p > .popupfoot > a.button:first-child').attr('href');
+    var team = jQuery('.sweet-alert > p > .gym_team').text();
     addLvl4Raid(gym, lvl, start, end, boss, direction);
     setTimeout(function() {jQuery('.sweet-alert .modal-close').click();}, 1000);
   }, 2000);
 }
 
-function addLvl4Raid(gym, lvl, start, end, boss, direction) {
-  console.debug(gym, lvl, start, end, boss, direction);
+function addLvl4Raid(gym, lvl, start, end, boss, direction, team) {
+  console.debug(gym, lvl, start, end, boss, direction, team);
   var formData = new FormData();
   formData.append('fn', 'addRaidData');
   formData.append('gym', gym);
@@ -70,6 +71,7 @@ function addLvl4Raid(gym, lvl, start, end, boss, direction) {
   formData.append('end', end);
   formData.append('boss', boss);
   formData.append('direction', direction);
+  formData.append('team', team);
   fetch('https://pogo.moviesom.com/index.php', {
     method: 'POST',
     body: formData
