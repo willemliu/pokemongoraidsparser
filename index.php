@@ -116,7 +116,6 @@ function addRaidData($request) {
       $stmt->bindParam(":address", $address, PDO::PARAM_STR);
       $stmt->execute();
       $dbh->commit();
-      var_dump($request);
     }
     catch(PDOException $e) {
         echo $e . PHP_EOL;
