@@ -293,6 +293,15 @@ echo "<!doctype html>
         fieldset {
           margin: .5rem 0;
         }
+        .team-Mystic {
+          color: blue;
+        }
+        .team-Instinct {
+          color: yellow;
+        }
+        .team-Valor {
+          color: red;
+        }
       </style>
     </head>
     <body>
@@ -315,7 +324,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   echo "
   <time class='countdown'>Calculating...</time>
   <h2>[{$row['lvl']}] 
-    <a href='{$row['direction']}' target='_blank'>{$row['gym']}</a>
+    <a href='{$row['direction']}' target='_blank'>{$row['gym']}</a> <span class='team-{$row['team']}'>{$row['team']}</span>
   </h2>
   <h3>Boss: {$htmlPokemon}</h3>
   <select class='select-pokemon' data-raid-id='{$row['id']}'>
