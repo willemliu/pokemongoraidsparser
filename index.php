@@ -295,12 +295,15 @@ echo "<!doctype html>
         }
         .team-Mystic {
           color: blue;
+          background-image: url(img/mystic48.png);
         }
         .team-Instinct {
           color: yellow;
+          background-image: url(img/instinct48.png);
         }
         .team-Valor {
           color: red;
+          background-image: url(img/valor48.png);
         }
       </style>
     </head>
