@@ -53,9 +53,9 @@ function addRaidData($request) {
       }
       $address = getAddressFromDirection($request['direction']);
 
-      $query = "INSERT INTO raids2
+      $query = "INSERT IGNORE INTO raids2
                                (gym, lvl, start, end, pokemon, direction) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction, :address)";
-      if(isset($request['boss']) && strlen($request['boss']) > 0) {
+      if(isset($request['boss']) && strlen($request['boss']) > 0 && $request['boss'] != 'null') {
         $query = "INSERT INTO raids2
                                (gym, lvl, start, end, pokemon, direction, address) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction, :address)
                                ON DUPLICATE KEY UPDATE pokemon=:pokemon, gym=:gym, address=:address";
