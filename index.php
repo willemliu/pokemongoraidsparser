@@ -147,7 +147,7 @@ function getAddressFromDirection($direction) {
     curl_getinfo($ch);
     curl_close($ch);
     $resultArray = json_decode($result, true);
-    for($resultArray['results'] as $res) {
+    foreach($resultArray['results'] as $res) {
         return $res['formatted_address'];
     }
     return null;
