@@ -295,15 +295,15 @@ echo "<!doctype html>
         }
         .team-Mystic {
           color: blue;
-          background-image: url(img/mystic48.png);
+          background: url(img/mystic48.png) no-repeat center center fixed;
         }
         .team-Instinct {
           color: yellow;
-          background-image: url(img/instinct48.png);
+          background: url(img/instinct48.png) no-repeat center center fixed;
         }
         .team-Valor {
           color: red;
-          background-image: url(img/valor48.png);
+          background: url(img/valor48.png) no-repeat center center fixed;
         }
       </style>
     </head>
@@ -327,7 +327,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   echo "
   <time class='countdown'>Calculating...</time>
   <h2>[{$row['lvl']}] 
-    <a href='{$row['direction']}' target='_blank'>{$row['gym']}</a> <span class='team-{$row['team']}'>{$row['team']}</span>
+    <a href='{$row['direction']}' target='_blank'>{$row['gym']}</a> <span class='team-{$row['team']}'></span>
   </h2>
   <h3>Boss: {$htmlPokemon}</h3>
   <select class='select-pokemon' data-raid-id='{$row['id']}'>
