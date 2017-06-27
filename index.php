@@ -16,15 +16,6 @@ switch ($method) {
       case 'joinRaid':
         joinRaid($_REQUEST);
         break;
-      case 'addRaid':
-        if(logCommand($_REQUEST)) {
-          addRaid($_REQUEST);
-        } else {
-          $msg['msg'] = 'Raid already added. Ignoring command.';
-          echo json_encode($msg);
-        }
-        exit(0);
-        break;
       case 'addRaidData':
         addRaidData($_REQUEST);
         exit(0);
@@ -51,31 +42,6 @@ switch ($method) {
   case 'OPTIONS':
   default:
     break;
-}
-
-function addRaid($request) {
-  global $dbh;
-  try {
-    if ($dbh->inTransaction() === false) {
-      $dbh->beginTransaction();
-    }
-    $stmt = $dbh->prepare("INSERT INTO raids
-                             (lvl, datetime, location, gym) VALUES (:lvl, :datetime, :location, :gym) 
-                             ON DUPLICATE KEY UPDATE gym=:gym");
-    $tz_object = new DateTimeZone('Europe/Amsterdam');
-    $today = new DateTime();
-    $today->setTimezone($tz_object);
-    $today->setTime($request['hours'], $request['minutes']);
-    $stmt->bindParam(":lvl", $request['lvl'], PDO::PARAM_INT);
-    $stmt->bindParam(":datetime", $today->format('Y-m-d H:i:s'), PDO::PARAM_STR);
-    $stmt->bindParam(":location", $request['location'], PDO::PARAM_STR);
-    $stmt->bindParam(":gym", $request['gym'], PDO::PARAM_STR);
-    $stmt->execute();
-    $dbh->commit();
-  }
-  catch(PDOException $e) {
-      echo $e . PHP_EOL;
-  }
 }
 
 function addRaidData($request) {    
