@@ -79,7 +79,7 @@ function addRaidData($request) {
       $stmt->bindParam(":pokemon", $request['boss'], PDO::PARAM_STR);
       $stmt->bindParam(":direction", $request['direction'], PDO::PARAM_STR);
       $stmt->bindParam(":address", $address, PDO::PARAM_STR);
-      $stmt->bindParam(":team", $address, PDO::PARAM_STR);
+      $stmt->bindParam(":team", $request['team'], PDO::PARAM_STR);
       $stmt->execute();
       $dbh->commit();
     }
