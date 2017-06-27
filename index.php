@@ -276,7 +276,7 @@ echo "<!doctype html>
     </head>
     <body>
       <h1>Pokemon Go Amsterdam raids</h1>
-      <label>Username: <input type='text' name='username' placeholder='Type your Pokemon Go name' value='' id='username' /></label>
+      <label>Username: <input type='text' name='username' placeholder='Type your Pokemon Go name' value='' id='username' autocomplete='off' /></label>
 
       <div class='raids'>
 ";
