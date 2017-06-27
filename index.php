@@ -304,7 +304,10 @@ echo "<!doctype html>
         }
         .boss {
           color: green;
-        } 
+        }
+        .address {
+            font-size: .7rem;
+        }
         h3 {
           margin: .5rem 0;
         } 
@@ -341,6 +344,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     <a href='{$row['direction']}' target='_blank'>{$row['gym']}</a>
   </h2>
   <h3>Boss: {$htmlPokemon}</h3>
+  <div class='address'>{$row['address']}</div>
   ";
   echo "<time datetime='{$row['start']}'>Start: {$row['start']}</time>";
   echo "<time class='endTime' datetime='{$row['end']}'>end: {$row['end']}</time>";
