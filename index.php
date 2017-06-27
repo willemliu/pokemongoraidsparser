@@ -267,6 +267,9 @@ echo "<!doctype html>
         h2 {
           margin: .5rem 0;
           font-size: .8rem;
+        }
+        .boss {
+          color: green;
         } 
         h3 {
           margin: .5rem 0;
@@ -290,12 +293,12 @@ echo "<!doctype html>
 
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $stmt = $dbh->prepare("SELECT * FROM raids2 r
-                              WHERE `end` > DATE_ADD(NOW(), INTERVAL 1 HOUR)
+                              WHERE `end` > NOW()
                               ORDER BY r.end DESC");
 $stmt->execute();
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   $htmlPokemon = str_replace("'", "&#39;", $row['pokemon']);
-  $htmlPokemon = ($htmlPokemon && strcasecmp($htmlPokemon, 'null') != 0)?$htmlPokemon:'??';
+  $htmlPokemon = ($htmlPokemon && strcasecmp($htmlPokemon, 'null') != 0)?"<span class='boss'>{$htmlPokemon}</span>":'??';
   echo "<form class='raid lvl{$row['lvl']}' method='POST' action='/'>";
   
   echo "
