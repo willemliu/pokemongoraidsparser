@@ -92,11 +92,11 @@ function addRaidData($request) {
                                (gym, lvl, start, end, pokemon, direction) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction, :address)";
       if(isset($request['boss']) && strlen($request['boss']) > 0) {
         $query = "INSERT INTO raids2
-                               (gym, lvl, start, end, pokemon, direction) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction, :address)
+                               (gym, lvl, start, end, pokemon, direction, address) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction, :address)
                                ON DUPLICATE KEY UPDATE pokemon=:pokemon, gym=:gym, address=:address";
       } else if(isset($address) && strlen($address) > 0) {
         $query = "INSERT INTO raids2
-                               (gym, lvl, start, end, pokemon, direction) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction, :address)
+                               (gym, lvl, start, end, pokemon, direction, address) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction, :address)
                                ON DUPLICATE KEY UPDATE gym=:gym, address=:address";
       }
       $stmt = $dbh->prepare($query);
