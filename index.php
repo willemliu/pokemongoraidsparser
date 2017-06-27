@@ -317,7 +317,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     <a href='{$row['direction']}' target='_blank'>{$row['gym']}</a>
   </h2>
   <h3>Boss: {$htmlPokemon}</h3>
-  <select class='select-pokemon'>
+  <select class='select-pokemon' data-raid-id='{$row['id']}'>
     <option value=''>Change boss</option>
     <option value='Lapras'>Lapras</option>
     <option value='Blastoise'>Blastoise</option>
