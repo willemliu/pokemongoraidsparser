@@ -124,7 +124,7 @@ function addPokemon($request) {
     if ($dbh->inTransaction() === false) {
       $dbh->beginTransaction();
     }
-    $stmt = $dbh->prepare("UPDATE raids SET pokemon=:pokemon WHERE id=:id");
+    $stmt = $dbh->prepare("UPDATE raids2 SET pokemon=:pokemon WHERE id=:id");
     $stmt->bindParam(":pokemon", $request['pokemon'], PDO::PARAM_STR);
     $stmt->bindParam(":id", $request['id'], PDO::PARAM_INT);
     $stmt->execute();
@@ -308,7 +308,7 @@ $stmt = $dbh->prepare("SELECT * FROM raids2 r
 $stmt->execute();
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   $htmlPokemon = str_replace("'", "&#39;", $row['pokemon']);
-  $htmlPokemon = ($htmlPokemon && strcasecmp($htmlPokemon, 'null') != 0)?"<span class='boss'>{$htmlPokemon}</span>":'??';
+  $htmlPokemon = ($htmlPokemon && strcasecmp($htmlPokemon, 'null') != 0)?"<span class='boss'>{$htmlPokemon}</span>":"??";
   echo "<form class='raid lvl{$row['lvl']}' method='POST' action='/'>";
   
   echo "
@@ -317,6 +317,16 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     <a href='{$row['direction']}' target='_blank'>{$row['gym']}</a>
   </h2>
   <h3>Boss: {$htmlPokemon}</h3>
+  <select class='select-pokemon'>
+    <option value=''>Change boss</option>
+    <option value='Lapras'>Lapras</option>
+    <option value='Blastoise'>Blastoise</option>
+    <option value='Snorlax'>Snorlax</option>
+    <option value='Venasaur'>Venasaur</option>
+    <option value='Charizard'>Charizard</option>
+    <option value='Rhydon'>Rhydon</option>
+    <option value='Tyranitar'>Tyranitar</option>
+  </select>
   <div class='address'>{$row['address']}</div>
   ";
   echo "<time datetime='{$row['start']}'>Start: {$row['start']}</time>";
@@ -346,7 +356,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 echo "
   <script>
-    var pokemonsEl = document.querySelectorAll('[name=\'pokemonBossName\']');
+    var pokemonsEl = document.querySelectorAll('.select-pokemon');
     for(let idx in pokemonsEl) {
       if(pokemonsEl.hasOwnProperty(idx)) {
         pokemonsEl[idx].addEventListener('change', function() {
