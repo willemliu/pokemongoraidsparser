@@ -343,7 +343,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   <h2>[{$row['lvl']}] 
     <a href='{$row['direction']}' target='_blank'>{$row['gym']}</a> <span class='team-logo team-{$row['team']}'></span>
   </h2>
-  <h3>Boss: <span class='bossname'>{$htmlPokemon}</span></h3>  
+  <h3>Boss: <span class='boss'>{$htmlPokemon}</span></h3>  
   ";
   if($row['gymhuntr_boss'] == 0) {
   echo "<select class='select-pokemon' data-raid-id='{$row['id']}'>
