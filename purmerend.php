@@ -223,7 +223,7 @@ echo "<!doctype html>
     <head>
       <meta charset='utf-8' />
       <meta http-equiv='refresh' content='60'>
-      <title>Pokemon Go Amsterdam raids</title>
+      <title>Pokemon Go {$city} raids</title>
       <meta name='viewport' content='initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, user-scalable=no' />
       <style>
         html {
@@ -333,7 +333,7 @@ echo "<!doctype html>
         <a href='{$file}' title='{$city}'>{$city}</a>
         <a href='purmerend.php' title='Purmerend'>Purmerend</a>
       </header>
-      <h1>Pokemon Go Amsterdam raids</h1>
+      <h1>Pokemon Go {$city} raids</h1>
       <label>Username: <input type='text' name='username' placeholder='Type your Pokemon Go name' value='' id='username' autocomplete='off' /></label>
 
       <div class='raids'>
