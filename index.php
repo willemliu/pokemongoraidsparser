@@ -462,6 +462,7 @@ echo "
       var distance = end - now;
       if (distance < 0) {
         el.innerHTML = endMsg ? endMsg : 'EXPIRED!';
+        el.classList.append('done');
         return;
       }
       var days = Math.floor(distance / _day);
