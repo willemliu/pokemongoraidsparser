@@ -352,8 +352,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   echo "<form class='raid lvl{$row['lvl']}' method='POST' action='{$file}'>";
   
   echo "
-  <time class='countdownStart'>...</time>
   <time class='countdownEnd'>...</time>
+  <time class='countdownStart'>...</time>
   <h2>[{$row['lvl']}] 
     <a href='{$row['direction']}' target='_blank'>{$row['gym']}</a> <span class='team-logo team-{$row['team']}'></span>
   </h2>
