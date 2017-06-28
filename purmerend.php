@@ -389,7 +389,7 @@ echo "
     for(let idx in pokemonsEl) {
       if(pokemonsEl.hasOwnProperty(idx)) {
         pokemonsEl[idx].addEventListener('change', function() {
-          this.parent.querySelector('.bossname').innerHTML = this.value;
+          this.parentElement.querySelector('.bossname').innerHTML = this.value;
           var formData = new FormData();
           formData.append('fn', 'addPokemon');
           formData.append('pokemon', this.value);
