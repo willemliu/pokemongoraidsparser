@@ -457,7 +457,7 @@ echo "
     var _hour = _minute * 60;
     var _day = _hour * 24;
 
-    function showRemaining(end, el) {
+    function showRemaining(end, el, endMsg) {
       var now = new Date();
       var distance = end - now;
       if (distance < 0) {
