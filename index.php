@@ -57,7 +57,7 @@ function addRaidData($request) {
                                (gym, lvl, start, end, pokemon, direction, team) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction, :address, :team)";
       if(isset($request['boss']) && strlen($request['boss']) > 0 && $request['boss'] != 'null') {
         $query = "INSERT INTO raids2
-                               (gym, lvl, start, end, pokemon, direction, address, team) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction, :address, :team)
+                               (gym, lvl, start, end, pokemon, direction, address, team, gymhuntr_boss) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction, :address, :team, 1)
                                ON DUPLICATE KEY UPDATE pokemon=:pokemon, gym=:gym, address=:address, team=:team";
       } else if(isset($address) && strlen($address) > 0) {
         $query = "INSERT INTO raids2
@@ -125,7 +125,7 @@ function addPokemon($request) {
     if ($dbh->inTransaction() === false) {
       $dbh->beginTransaction();
     }
-    $stmt = $dbh->prepare("UPDATE raids2 SET pokemon=:pokemon WHERE id=:id");
+    $stmt = $dbh->prepare("UPDATE raids2 SET pokemon=:pokemon, gymhuntr_boss=0 WHERE id=:id");
     $stmt->bindParam(":pokemon", $request['pokemon'], PDO::PARAM_STR);
     $stmt->bindParam(":id", $request['id'], PDO::PARAM_INT);
     $stmt->execute();
