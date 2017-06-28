@@ -5,7 +5,8 @@
 error_reporting(E_ALL ^ (E_STRICT | E_DEPRECATED | E_NOTICE));
 ini_set('display_errors', 1);
 include_once ('./lib/DB.php');
-
+$file = __FILE__;
+$city = basename(__FILE__, '.php');
 $db = new DB();
 $dbh = $db->connect();
 
@@ -322,13 +323,14 @@ echo "<!doctype html>
 
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $stmt = $dbh->prepare("SELECT * FROM raids2 r
-                              WHERE address LIKE '%Amsterdam%' AND `end` > DATE_ADD(NOW(), INTERVAL 2 HOUR)
+                              WHERE address LIKE '%:city%' AND `end` > DATE_ADD(NOW(), INTERVAL 2 HOUR)
                               ORDER BY r.end DESC");
+$stmt2->bindParam(":city", $city, PDO::PARAM_STR);
 $stmt->execute();
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   $htmlPokemon = str_replace("'", "&#39;", $row['pokemon']);
   $htmlPokemon = ($htmlPokemon && strcasecmp($htmlPokemon, 'null') != 0)?"<span class='boss'>{$htmlPokemon}</span>":"??";
-  echo "<form class='raid lvl{$row['lvl']}' method='POST' action='/'>";
+  echo "<form class='raid lvl{$row['lvl']}' method='POST' action='{$file}'>";
   
   echo "
   <time class='countdown'>Calculating...</time>
@@ -385,7 +387,7 @@ echo "
           formData.append('fn', 'addPokemon');
           formData.append('pokemon', this.value);
           formData.append('id', this.getAttribute('data-raid-id'));
-          fetch('index.php', {
+          fetch('{$file}', {
             method: 'POST',
             body: formData
           });
