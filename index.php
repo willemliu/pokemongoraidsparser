@@ -58,7 +58,7 @@ function addRaidData($request) {
       if(isset($request['boss']) && strlen($request['boss']) > 0 && $request['boss'] != 'null') {
         $query = "INSERT INTO raids2
                                (gym, lvl, start, end, pokemon, direction, address, team, gymhuntr_boss) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction, :address, :team, 1)
-                               ON DUPLICATE KEY UPDATE pokemon=:pokemon, gym=:gym, address=:address, team=:team";
+                               ON DUPLICATE KEY UPDATE pokemon=:pokemon, gym=:gym, address=:address, team=:team, gymhuntr_boss=1";
       } else if(isset($address) && strlen($address) > 0) {
         $query = "INSERT INTO raids2
                                (gym, lvl, start, end, pokemon, direction, address, team) VALUES (:gym, :lvl, :start, :end, :pokemon, :direction, :address, :team)
