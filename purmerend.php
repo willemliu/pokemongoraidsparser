@@ -328,7 +328,7 @@ $stmt->execute();
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   $htmlPokemon = str_replace("'", "&#39;", $row['pokemon']);
   $htmlPokemon = ($htmlPokemon && strcasecmp($htmlPokemon, 'null') != 0)?"<span class='boss'>{$htmlPokemon}</span>":"??";
-  echo "<form class='raid lvl{$row['lvl']}' method='POST' action='{__FILE__}'>";
+  echo "<form class='raid lvl{$row['lvl']}' method='POST' action='/'>";
   
   echo "
   <time class='countdown'>Calculating...</time>
@@ -385,7 +385,7 @@ echo "
           formData.append('fn', 'addPokemon');
           formData.append('pokemon', this.value);
           formData.append('id', this.getAttribute('data-raid-id'));
-          fetch('{__FILE__}', {
+          fetch('index.php', {
             method: 'POST',
             body: formData
           });
