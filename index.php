@@ -5,7 +5,7 @@
 error_reporting(E_ALL ^ (E_STRICT | E_DEPRECATED | E_NOTICE));
 ini_set('display_errors', 1);
 include_once ('./lib/DB.php');
-$file = __FILE__;
+$file = basename(__FILE__);
 $db = new DB();
 $dbh = $db->connect();
 
