@@ -5,7 +5,7 @@
 error_reporting(E_ALL ^ (E_STRICT | E_DEPRECATED | E_NOTICE));
 ini_set('display_errors', 1);
 include_once ('./lib/DB.php');
-$file = __FILE__;
+$file = basename(__FILE__);
 $city = basename(__FILE__, '.php');
 $db = new DB();
 $dbh = $db->connect();
@@ -315,7 +315,7 @@ echo "<!doctype html>
       </style>
     </head>
     <body>
-      <h1>Pokemon Go Amsterdam raids</h1>
+      <h1>Pokemon Go {$city} raids</h1>
       <label>Username: <input type='text' name='username' placeholder='Type your Pokemon Go name' value='' id='username' autocomplete='off' /></label>
 
       <div class='raids'>
