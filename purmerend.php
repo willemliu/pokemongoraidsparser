@@ -331,7 +331,7 @@ echo "<!doctype html>
     <body>
       <header>
         <a href='index.php' title='Amsterdam'>Amsterdam</a>
-        <a href='{$file}' title='{$city}'>{$city}</a>
+        <a href='purmerend.php' title='Purmerend'>Purmerend</a>
       </header>
       <h1>Pokemon Go {$city} raids</h1>
       <label>Username: <input type='text' name='username' placeholder='Type your Pokemon Go name' value='' id='username' autocomplete='off' /></label>

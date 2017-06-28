@@ -330,7 +330,7 @@ echo "<!doctype html>
     </head>
     <body>
       <header>
-        <a href='{$file}' title='{$city}'>{$city}</a>
+        <a href='index.php' title='Amsterdam'>Amsterdam</a>
         <a href='purmerend.php' title='Purmerend'>Purmerend</a>
       </header>
       <h1>Pokemon Go {$city} raids</h1>
