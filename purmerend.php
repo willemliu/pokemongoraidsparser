@@ -343,7 +343,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   <h2>[{$row['lvl']}] 
     <a href='{$row['direction']}' target='_blank'>{$row['gym']}</a> <span class='team-logo team-{$row['team']}'></span>
   </h2>
-  <h3>Boss: {$htmlPokemon}</h3>  
+  <h3>Boss: <span class='bossname'>{$htmlPokemon}</span></h3>  
   ";
   if($row['gymhuntr_boss'] == 0) {
   echo "<select class='select-pokemon' data-raid-id='{$row['id']}'>
@@ -389,6 +389,7 @@ echo "
     for(let idx in pokemonsEl) {
       if(pokemonsEl.hasOwnProperty(idx)) {
         pokemonsEl[idx].addEventListener('change', function() {
+          this.parent.querySelector('.bossname').innerHTML = this.value;
           var formData = new FormData();
           formData.append('fn', 'addPokemon');
           formData.append('pokemon', this.value);
