@@ -243,10 +243,14 @@ echo "<!doctype html>
           box-sizing: border-box;
           margin: .1rem
         }
+        .countdownStart {
+          display: inline;
+        }
         .countdownStart:contains('Raid opened!') {
           color: green;
         }
         .countdownEnd {
+          display: inline;
           float: right;
         }
         .countdownEnd:contains('Raid ended!') {
