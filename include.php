@@ -297,7 +297,14 @@ echo "<!doctype html>
         }
         h3 {
           margin: .5rem 0;
-        } 
+        }
+        .endTime {
+          display: inline;
+          float: right;
+        }
+        .startTime {
+          display: inline;
+        }
         time { 
           display: block; 
           font-size: .8rem;
@@ -370,8 +377,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     </select>";
   }
   echo "<div class='address'>{$row['address']}</div>";
+  echo "<time class='endTime' datetime='{$row['end']}'>End: {$row['end']}</time>";
   echo "<time class='startTime' datetime='{$row['start']}'>Start: {$row['start']}</time>";
-  echo "<time class='endTime' datetime='{$row['end']}'>end: {$row['end']}</time>";
   $stmt2 = $dbh->prepare("SELECT * FROM users u
                               WHERE raid_id=:raid_id
                               ORDER BY u.added ASC");
