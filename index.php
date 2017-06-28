@@ -5,7 +5,7 @@
 error_reporting(E_ALL ^ (E_STRICT | E_DEPRECATED | E_NOTICE));
 ini_set('display_errors', 1);
 include_once ('./lib/DB.php');
-
+$file = __FILE__;
 $db = new DB();
 $dbh = $db->connect();
 
@@ -328,7 +328,7 @@ $stmt->execute();
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   $htmlPokemon = str_replace("'", "&#39;", $row['pokemon']);
   $htmlPokemon = ($htmlPokemon && strcasecmp($htmlPokemon, 'null') != 0)?"<span class='boss'>{$htmlPokemon}</span>":"??";
-  echo "<form class='raid lvl{$row['lvl']}' method='POST' action='{__FILE__}'>";
+  echo "<form class='raid lvl{$row['lvl']}' method='POST' action='{$file}'>";
   
   echo "
   <time class='countdown'>Calculating...</time>
@@ -385,7 +385,7 @@ echo "
           formData.append('fn', 'addPokemon');
           formData.append('pokemon', this.value);
           formData.append('id', this.getAttribute('data-raid-id'));
-          fetch('{__FILE__}', {
+          fetch('{$file}', {
             method: 'POST',
             body: formData
           });
