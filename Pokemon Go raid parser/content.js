@@ -27,12 +27,19 @@ function start() {
   var timeout = 0;
   jQuery('.dots:contains(....),.dots:contains(.....)').each(function() {
     setTimeout(jQuery.proxy(parseData, this), timeout);
-    timeout += 4000;
+    timeout += 2500;
   });
 
 }
 
 function parseData() {
+  lvlRegex.lastIndex = 0;
+  startRegex.lastIndex = 0;
+  startRegex2.lastIndex = 0;
+  endRegex.lastIndex = 0;
+  endRegex2.lastIndex = 0;
+  lvlRegex.lastIndex = 0;
+  bossRegex.lastIndex = 0;
   jQuery(this).closest('.leaflet-marker-icon').click();
   setTimeout(function() {
     var gym = jQuery(".sweet-alert > h2")
@@ -41,7 +48,7 @@ function parseData() {
         .remove()   //remove all the children
         .end()  //again go back to selected element
         .text();
-    var txt = jQuery('.sweet-alert > p').html();
+    var txt = jQuery('.sweet-alert > p').clone().html();
     console.debug(txt);
     var lvl = lvlRegex.exec(txt);
     lvl = (lvl && lvl.length === 2)?lvl[1]:'4';
@@ -80,15 +87,16 @@ function parseData() {
         end[1] + "-" + end[2] + "-" + end[3] + " " + end[4] + ":" + end[5] + ":" + end[6]
       ];
     }
-    console.log("END:", end);
+    console.debug("END:", end);
     end = (end && end.length === 2)?end[1]:'';
-    console.log("END2:", end);
+    console.debug("END2:", end);
     var boss = bossRegex.exec(txt);
     boss = (boss && boss.length === 2) ? boss[1] : '';
     var direction = jQuery('.sweet-alert > p > .popupfoot > a.button:first-child').attr('href');
     var team = jQuery('.sweet-alert > p > .gym_team').text();
     addLvl4Raid(gym, lvl, start, end, boss, direction, team);
     jQuery('.sweet-alert, .sweet-overlay').remove();
+    console.debug('removed');
   }, 2000);
 }
 

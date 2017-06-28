@@ -339,7 +339,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   ";
   if($row['gymhuntr_boss'] == 0) {
   echo "<select class='select-pokemon' data-raid-id='{$row['id']}'>
-    <option value=''>Change boss</option>
+    <option value=''>Set boss</option>
     <option value='Lapras'>Lapras</option>
     <option value='Blastoise'>Blastoise</option>
     <option value='Snorlax'>Snorlax</option>
