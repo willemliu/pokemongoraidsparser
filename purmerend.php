@@ -6,7 +6,7 @@ error_reporting(E_ALL ^ (E_STRICT | E_DEPRECATED | E_NOTICE));
 ini_set('display_errors', 1);
 include_once ('./lib/DB.php');
 $file = basename(__FILE__);
-$city = basename(__FILE__, '.php');
+$city = ucfirst(basename(__FILE__, '.php'));
 $db = new DB();
 $dbh = $db->connect();
 
@@ -222,7 +222,7 @@ echo "<!doctype html>
   <html>
     <head>
       <meta charset='utf-8' />
-      <title>Pokemon Go Amsterdam raids</title>
+      <title>Pokemon Go {$city} raids</title>
       <meta name='viewport' content='initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, user-scalable=no' />
       <style>
         html {
