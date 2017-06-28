@@ -331,6 +331,9 @@ echo "<!doctype html>
           color: red;
           background: url(img/valor48.png) no-repeat center center;
         }
+        input[type='submit'] {
+          display: block;
+        }
       </style>
     </head>
     <body>
