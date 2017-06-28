@@ -222,6 +222,7 @@ echo "<!doctype html>
   <html>
     <head>
       <meta charset='utf-8' />
+      <meta http-equiv='refresh' content='60'>
       <title>Pokemon Go Amsterdam raids</title>
       <meta name='viewport' content='initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, user-scalable=no' />
       <style>
