@@ -6,7 +6,7 @@ error_reporting(E_ALL ^ (E_STRICT | E_DEPRECATED | E_NOTICE));
 ini_set('display_errors', 1);
 include_once ('./lib/DB.php');
 $file = basename(__FILE__);
-$city = ucfirst(basename(__FILE__, '.php'));
+$city = (strcasecmp(basename(__FILE__, '.php'), 'index') == 0) ? 'Amsterdam' : ucfirst(basename(__FILE__, '.php'));
 $db = new DB();
 $dbh = $db->connect();
 
