@@ -246,14 +246,14 @@ echo "<!doctype html>
         .countdownStart {
           display: inline;
         }
-        .countdownStart:contains('Raid opened!') {
+        .countdownStart.done {
           color: green;
         }
         .countdownEnd {
           display: inline;
           float: right;
         }
-        .countdownEnd:contains('Raid ended!') {
+        .countdownEnd.done {
           color: red;
         }
         .lvl1 {
