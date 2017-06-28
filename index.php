@@ -335,8 +335,10 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   <h2>[{$row['lvl']}] 
     <a href='{$row['direction']}' target='_blank'>{$row['gym']}</a> <span class='team-logo team-{$row['team']}'></span>
   </h2>
-  <h3>Boss: {$htmlPokemon}</h3>
-  <select class='select-pokemon' data-raid-id='{$row['id']}'>
+  <h3>Boss: {$htmlPokemon}</h3>  
+  ";
+  if($row['gymhuntr_boss'] == 0) {
+  echo "<select class='select-pokemon' data-raid-id='{$row['id']}'>
     <option value=''>Change boss</option>
     <option value='Lapras'>Lapras</option>
     <option value='Blastoise'>Blastoise</option>
@@ -345,9 +347,9 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     <option value='Charizard'>Charizard</option>
     <option value='Rhydon'>Rhydon</option>
     <option value='Tyranitar'>Tyranitar</option>
-  </select>
-  <div class='address'>{$row['address']}</div>
-  ";
+    </select>";
+  }
+  echo "<div class='address'>{$row['address']}</div>";
   echo "<time datetime='{$row['start']}'>Start: {$row['start']}</time>";
   echo "<time class='endTime' datetime='{$row['end']}'>end: {$row['end']}</time>";
   $stmt2 = $dbh->prepare("SELECT * FROM users u
