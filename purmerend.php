@@ -223,7 +223,7 @@ echo "<!doctype html>
     <head>
       <meta charset='utf-8' />
       <meta http-equiv='refresh' content='60'>
-      <title>Pokemon Go {$city} raids</title>
+      <title>Pokemon Go Amsterdam raids</title>
       <meta name='viewport' content='initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, user-scalable=no' />
       <style>
         html {
@@ -242,6 +242,15 @@ echo "<!doctype html>
           padding: .5rem;
           box-sizing: border-box;
           margin: .1rem
+        }
+        .countdownStart:contains('Raid opened!') {
+          color: green;
+        }
+        .countdownEnd {
+          float: right;
+        }
+        .countdownEnd:contains('Raid ended!') {
+          color: red;
         }
         .lvl1 {
           border-color: green;
@@ -317,10 +326,10 @@ echo "<!doctype html>
     </head>
     <body>
       <header>
-        <a href='index.php' title='Amsterdam'>Amsterdam</a>
         <a href='{$file}' title='{$city}'>{$city}</a>
+        <a href='purmerend.php' title='Purmerend'>Purmerend</a>
       </header>
-      <h1>Pokemon Go {$city} raids</h1>
+      <h1>Pokemon Go Amsterdam raids</h1>
       <label>Username: <input type='text' name='username' placeholder='Type your Pokemon Go name' value='' id='username' autocomplete='off' /></label>
 
       <div class='raids'>
@@ -339,11 +348,12 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   echo "<form class='raid lvl{$row['lvl']}' method='POST' action='{$file}'>";
   
   echo "
-  <time class='countdown'>Calculating...</time>
+  <time class='countdownStart'>...</time>
+  <time class='countdownEnd'>...</time>
   <h2>[{$row['lvl']}] 
     <a href='{$row['direction']}' target='_blank'>{$row['gym']}</a> <span class='team-logo team-{$row['team']}'></span>
   </h2>
-  <h3>Boss: <span class='boss'>{$htmlPokemon}</span></h3>  
+  <h3>Boss: <span class='boss'>{$htmlPokemon}</span></h3>
   ";
   if($row['gymhuntr_boss'] == 0) {
   echo "<select class='select-pokemon' data-raid-id='{$row['id']}'>
@@ -358,7 +368,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     </select>";
   }
   echo "<div class='address'>{$row['address']}</div>";
-  echo "<time datetime='{$row['start']}'>Start: {$row['start']}</time>";
+  echo "<time class='startTime' datetime='{$row['start']}'>Start: {$row['start']}</time>";
   echo "<time class='endTime' datetime='{$row['end']}'>end: {$row['end']}</time>";
   $stmt2 = $dbh->prepare("SELECT * FROM users u
                               WHERE raid_id=:raid_id
@@ -447,7 +457,7 @@ echo "
       var now = new Date();
       var distance = end - now;
       if (distance < 0) {
-        el.innerHTML = 'EXPIRED!';
+        el.innerHTML = endMsg ? endMsg : 'EXPIRED!';
         return;
       }
       var days = Math.floor(distance / _day);
@@ -463,8 +473,10 @@ echo "
       for(var idx in raids) {
         if(raids.hasOwnProperty(idx)) {
           var raid = raids[idx];
-          var dateTime = new Date(raid.querySelector('time.endTime').getAttribute('datetime'));
-          showRemaining(dateTime, raid.querySelector('time.countdown'));
+          var closingTime = new Date(raid.querySelector('time.endTime').getAttribute('datetime'));
+          showRemaining(closingTime, raid.querySelector('time.countdownEnd'), 'Raid ended!');
+          var openTime = new Date(raid.querySelector('time.startTime').getAttribute('datetime'));
+          showRemaining(openTime, raid.querySelector('time.countdownStart'), 'Raid opened!');
         }
       }
     }, 2000);

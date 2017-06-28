@@ -243,6 +243,15 @@ echo "<!doctype html>
           box-sizing: border-box;
           margin: .1rem
         }
+        .countdownStart:contains('Raid opened!') {
+          color: green;
+        }
+        .countdownEnd {
+          float: right;
+        }
+        .countdownEnd:contains('Raid ended!') {
+          color: red;
+        }
         .lvl1 {
           border-color: green;
         }
@@ -339,7 +348,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   echo "<form class='raid lvl{$row['lvl']}' method='POST' action='{$file}'>";
   
   echo "
-  <time class='countdown'>Calculating...</time>
+  <time class='countdownStart'>...</time>
+  <time class='countdownEnd'>...</time>
   <h2>[{$row['lvl']}] 
     <a href='{$row['direction']}' target='_blank'>{$row['gym']}</a> <span class='team-logo team-{$row['team']}'></span>
   </h2>
@@ -358,7 +368,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     </select>";
   }
   echo "<div class='address'>{$row['address']}</div>";
-  echo "<time datetime='{$row['start']}'>Start: {$row['start']}</time>";
+  echo "<time class='startTime' datetime='{$row['start']}'>Start: {$row['start']}</time>";
   echo "<time class='endTime' datetime='{$row['end']}'>end: {$row['end']}</time>";
   $stmt2 = $dbh->prepare("SELECT * FROM users u
                               WHERE raid_id=:raid_id
@@ -447,7 +457,7 @@ echo "
       var now = new Date();
       var distance = end - now;
       if (distance < 0) {
-        el.innerHTML = 'EXPIRED!';
+        el.innerHTML = endMsg ? endMsg : 'EXPIRED!';
         return;
       }
       var days = Math.floor(distance / _day);
@@ -463,8 +473,10 @@ echo "
       for(var idx in raids) {
         if(raids.hasOwnProperty(idx)) {
           var raid = raids[idx];
-          var dateTime = new Date(raid.querySelector('time.endTime').getAttribute('datetime'));
-          showRemaining(dateTime, raid.querySelector('time.countdown'));
+          var closingTime = new Date(raid.querySelector('time.endTime').getAttribute('datetime'));
+          showRemaining(closingTime, raid.querySelector('time.countdownEnd'), 'Raid ended!');
+          var openTime = new Date(raid.querySelector('time.startTime').getAttribute('datetime'));
+          showRemaining(openTime, raid.querySelector('time.countdownStart'), 'Raid opened!');
         }
       }
     }, 2000);
