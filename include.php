@@ -339,6 +339,7 @@ echo "<!doctype html>
     <body>
       <header>
         <a href='index.php' title='Amsterdam'>Amsterdam</a>
+        <a href='haarlem.php' title='Haarlem'>Haarlem</a>
         <a href='purmerend.php' title='Purmerend'>Purmerend</a>
       </header>
       <h1>Pokemon Go {$city} raids</h1>
