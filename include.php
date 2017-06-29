@@ -350,10 +350,9 @@ echo "<!doctype html>
 
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $stmt = $dbh->prepare("SELECT * FROM raids2 r
-                              WHERE address LIKE :city AND `end` > DATE_ADD(NOW(), INTERVAL 2 HOUR)
+                              WHERE address REGEXP :city AND `end` > DATE_ADD(NOW(), INTERVAL 2 HOUR)
                               ORDER BY r.end DESC");
-$cityParam = "%{$city}%";
-$stmt->bindParam(":city", $cityParam, PDO::PARAM_STR);
+$stmt->bindParam(":city", $city, PDO::PARAM_STR);
 $stmt->execute();
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   $htmlPokemon = str_replace("'", "&#39;", $row['pokemon']);
